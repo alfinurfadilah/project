@@ -3,8 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
+use App\Models\ItemCategories;
+use App\Models\ItemType;
+use App\Models\Uom;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Auth;
+use Intervention\Image\Facades\Image;
 
 class ItemController extends Controller
 {
@@ -35,6 +43,13 @@ class ItemController extends Controller
     public function create()
     {
         //
+        $breadcumb = "Form Tambah Barang";
+        
+        $itemCategories = ItemCategories::get();
+        $itemType = ItemType::get();
+        $uom = Uom::get();
+
+        return view('item.create', compact('breadcumb', 'itemCategories', 'itemType', 'uom'));
     }
 
     /**
@@ -45,7 +60,7 @@ class ItemController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        dd($request->all());
     }
 
     /**

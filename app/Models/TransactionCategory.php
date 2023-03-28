@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ItemCategories extends Model
+class TransactionCategory extends Model
 {
     use HasFactory;
 
-    protected $table = 'item_categories';
+    protected $table = 'transaction_categories';
 
     protected $fillable = [
-        'name', 'description', 'created_by', 'updated_by'
+        'name', 'description'
     ];
 }

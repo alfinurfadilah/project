@@ -15,7 +15,6 @@ return new class extends Migration
     {
         Schema::create('items', function (Blueprint $table) {
             $table->id();
-            $table->integer('supplier_id');
             $table->integer('item_category_id');
             $table->integer('item_type_id');
             $table->integer('uom_id');

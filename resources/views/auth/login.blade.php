@@ -51,7 +51,7 @@
 								<!--end::Title-->
 								<!--begin::Link-->
 								<div class="text-gray-400 fw-bold fs-7">New Here?
-								<a href="#" class="link-success fw-bolder">Create an Account</a></div>
+								<a href="{{ route('register') }}" class="link-success fw-bolder">Create an Account</a></div>
 								<!--end::Link-->
 							</div>
 							<!--begin::Heading-->

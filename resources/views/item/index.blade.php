@@ -15,7 +15,7 @@
             <!--begin::Toolbar-->
             <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base">
                 <!--begin::Add customer-->
-                <a href="{{ url('/items/create')}}" class="btn btn-primary">
+                <a href="{{ route('item.create')}}" class="btn btn-primary">
                     <!--begin::Svg Icon | path: assets/media/icons/duotune/arrows/arr087.svg-->
                     <span class="svg-icon svg-icon-muted svg-icon-2x">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">

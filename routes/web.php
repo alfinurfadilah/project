@@ -28,6 +28,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/item', [App\Http\Controllers\ItemController::class, 'index'])->name('item.index');
     Route::get('/item/create', [App\Http\Controllers\ItemController::class, 'create'])->name('item.create');
+    Route::post('/item/store', [App\Http\Controllers\ItemController::class, 'store'])->name('item.store');
 
     Route::get('/itemCategoryType', [App\Http\Controllers\ItemCategoryTypeController::class, 'index'])->name('itemCategoryType.index');
     Route::get('/itemCategoryType/create', [App\Http\Controllers\ItemCategoryTypeController::class, 'create'])->name('itemCategoryType.create');
@@ -49,6 +50,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/itemType/edit/{id}', [App\Http\Controllers\ItemTypeController::class, 'edit'])->name('itemType.edit');
     Route::post('/itemType/update', [App\Http\Controllers\ItemTypeController::class, 'update'])->name('itemType.update');
     Route::delete('/itemType/delete/{id}', [App\Http\Controllers\ItemTypeController::class, 'destroy'])->name('itemType.delete');
+
+    Route::get('/transactionCategory', [App\Http\Controllers\TransactionCategoryController::class, 'index'])->name('transactionCategory.index');
+    Route::get('/transactionCategory/create', [App\Http\Controllers\TransactionCategoryController::class, 'create'])->name('transactionCategory.create');
+    Route::post('/transactionCategory/store', [App\Http\Controllers\TransactionCategoryController::class, 'store'])->name('transactionCategory.store');
+    Route::get('/transactionCategory/edit/{id}', [App\Http\Controllers\TransactionCategoryController::class, 'edit'])->name('transactionCategory.edit');
+    Route::post('/transactionCategory/update', [App\Http\Controllers\TransactionCategoryController::class, 'update'])->name('transactionCategory.update');
+    Route::delete('/transactionCategory/delete/{id}', [App\Http\Controllers\TransactionCategoryController::class, 'destroy'])->name('transactionCategory.delete');
 
     Route::get('/uom', [App\Http\Controllers\UomController::class, 'index'])->name('uom.index');
     Route::get('/uom/create', [App\Http\Controllers\UomController::class, 'create'])->name('uom.create');

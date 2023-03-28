@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ItemCategories;
-use App\Models\ItemCategoryType;
+use App\Models\TransactionCategory;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
 
-class ItemCategoriesController extends Controller
+class TransactionCategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,15 +18,15 @@ class ItemCategoriesController extends Controller
     public function index()
     {
         //
-        $breadcumb = "Kategori";
+        $breadcumb = "Kategori Transaksi";
 
-        $itemCategories = ItemCategories::when(request('search'), function($query){
+        $transactionCategory = TransactionCategory::when(request('search'), function($query){
             return $query->where('name','like','%'.request('search').'%');
         })
         ->orderBy('created_at','desc')
         ->paginate(10);
         
-        return view('itemCategory.index', compact('breadcumb', 'itemCategories'));
+        return view('transactionCategory.index', compact('breadcumb', 'transactionCategory'));
     }
 
     /**
@@ -39,9 +37,9 @@ class ItemCategoriesController extends Controller
     public function create()
     {
         //
-        $breadcumb = "Form Tambah Kategori";
+        $breadcumb = "Form Tambah Kategori Transaksi";
         
-        return view('itemCategory.create', compact('breadcumb'));
+        return view('transactionCategory.create', compact('breadcumb'));
     }
 
     /**
@@ -62,14 +60,13 @@ class ItemCategoriesController extends Controller
 
         try{
 
-            ItemCategories::create([
+            TransactionCategory::create([
                 'name' => $request->name,
                 'description' => $request->description, 
-                'created_by' => Auth::id(),
             ]);
 
             DB::commit();   
-            return redirect()->route('itemCategory.index')->with('success','Data berhasil disimpan');
+            return redirect()->route('transactionCategory.index')->with('success','Data berhasil disimpan');
 
         } catch(\Exeception $e) {
 
@@ -84,10 +81,10 @@ class ItemCategoriesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\ItemCategories  $itemCategories
+     * @param  \App\Models\TransactionCategory  $transactionCategory
      * @return \Illuminate\Http\Response
      */
-    public function show(ItemCategories $itemCategories)
+    public function show(TransactionCategory $transactionCategory)
     {
         //
     }
@@ -95,27 +92,27 @@ class ItemCategoriesController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\ItemCategories  $itemCategories
+     * @param  \App\Models\TransactionCategory  $transactionCategory
      * @return \Illuminate\Http\Response
      */
-    public function edit($id, ItemCategories $itemCategories)
+    public function edit($id, TransactionCategory $transactionCategory)
     {
         // dd($id);
-        $breadcumb = "Edit Kategori";
+        $breadcumb = "Edit Kategori Transaksi";
 
-        $itemCategory = $itemCategories->find($id);
+        $transactionCategory = $transactionCategory->find($id);
                     
-        return view('itemCategory.edit', compact('breadcumb', 'itemCategory'));
+        return view('transactionCategory.edit', compact('breadcumb', 'transactionCategory'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\ItemCategories  $itemCategories
+     * @param  \App\Models\TransactionCategory  $transactionCategory
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ItemCategories $itemCategories)
+    public function update(Request $request, TransactionCategory $transactionCategory)
     {
         // dd($request->all());
 
@@ -132,7 +129,7 @@ class ItemCategoriesController extends Controller
                 'description' => $request->description
             ];
 
-            $itemCategories->find($request->id)->update($data);
+            $transactionCategory->find($request->id)->update($data);
 
             DB::commit();   
             return redirect()->back()->with('success','Data Berhasil Disimpan'); 
@@ -144,28 +141,28 @@ class ItemCategoriesController extends Controller
                 
         }
 
-        return redirect()->back()->with('error','Data gagal disimpan'); 
+        return redirect()->back()->with('error','Data gagal disimpan');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\ItemCategories  $itemCategories
+     * @param  \App\Models\TransactionCategory  $transactionCategory
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id, ItemCategories $itemCategories)
+    public function destroy($id, TransactionCategory $transactionCategory)
     {
         DB::beginTransaction();
 
         try{
-            $itemCategories->find($id)->delete();     
+            $transactionCategory->find($id)->delete();     
 
             DB::commit();
-            return redirect()->route('itemCategory.index')->with('success','Kagegori berhasil dihapus');                             
+            return redirect()->route('transactionCategory.index')->with('success','Kagegori berhasil dihapus');                             
         }
         catch(\Exeception $e){
             DB::rollback();      
-            return redirect()->route('itemCategory.index')->with('error', $e);      
-        }  
+            return redirect()->route('transactionCategory.index')->with('error', $e);      
+        }
     }
 }

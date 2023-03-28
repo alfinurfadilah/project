@@ -61,7 +61,7 @@
                                 </a>
                             </div>
 
-                            <div data-kt-menu-trigger="click" data-kt-menu-placement="right-start" class="menu-item py-3 {{ Route::is('itemCategoryType.index') ? 'here' : '' }} {{ Route::is('itemCategory.index') ? 'here' : '' }} {{ Route::is('itemType.index') ? 'here' : '' }}">
+                            <div data-kt-menu-trigger="click" data-kt-menu-placement="right-start" class="menu-item py-3 {{ Route::is('itemCategoryType.index') ? 'here' : '' }} {{ Route::is('itemCategory.index') ? 'here' : '' }} {{ Route::is('itemType.index') ? 'here' : '' }} {{ Route::is('transactionCategory.index') ? 'here' : '' }} {{ Route::is('uom.index') ? 'here' : '' }} {{ Route::is('customer.index') ? 'here' : '' }}">
                                 <span class="menu-link" title="Masterdata" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
                                     <span class="menu-icon">
                                         <!--begin::Svg Icon | path: assets/media/icons/duotune/abstract/abs027.svg-->
@@ -81,7 +81,7 @@
                                         </div>
                                     </div>
                                     <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-                                        <span class="menu-link">
+                                        <span class="menu-link {{ Route::is('itemCategoryType.index') ? 'active' : '' }} {{ Route::is('itemCategory.index') ? 'active' : '' }} {{ Route::is('itemType.index') ? 'active' : '' }}">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
@@ -89,14 +89,14 @@
                                             <span class="menu-arrow"></span>
                                         </span>
                                         <div class="menu-sub menu-sub-accordion">
-                                            <div class="menu-item">
+                                            {{-- <div class="menu-item">
                                                 <a class="menu-link {{ Route::is('itemCategoryType.index') ? 'active' : '' }}" href="{{ route('itemCategoryType.index') }}">
                                                     <span class="menu-bullet">
                                                         <span class="bullet bullet-dot"></span>
                                                     </span>
                                                     <span class="menu-title">Jenis Kategori</span>
                                                 </a>
-                                            </div>
+                                            </div> --}}
                                             <div class="menu-item">
                                                 <a class="menu-link {{ Route::is('itemCategory.index') ? 'active' : '' }}" href="{{ route('itemCategory.index') }}">
                                                     <span class="menu-bullet">
@@ -113,18 +113,26 @@
                                                     <span class="menu-title">Jenis Barang</span>
                                                 </a>
                                             </div>
-                                            <div class="menu-item">
-                                               <a class="menu-link" href="#">
+                                            {{-- <div class="menu-item">
+                                               <a class="menu-link {{ Route::is('transactionCategory.index') ? 'active' : '' }}" href="{{ route('transactionCategory.index') }}">
                                                     <span class="menu-bullet">
                                                         <span class="bullet bullet-dot"></span>
                                                     </span>
                                                     <span class="menu-title">Kategori Transaksi</span>
                                                 </a>
-                                            </div>
+                                            </div> --}}
                                         </div>
                                     </div>
                                     <div class="menu-item">
-                                        <a class="menu-link" href="#">
+                                        <a class="menu-link {{ Route::is('uom.index') ? 'active' : '' }}" href="{{route('uom.index')}}">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">Unit Of Measure</span>
+                                        </a>
+                                    </div>
+                                    <div class="menu-item">
+                                        <a class="menu-link {{ Route::is('customer.index') ? 'active' : '' }}" href="{{route('customer.index')}}">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
@@ -181,14 +189,6 @@
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
                                             <span class="menu-title">History Stock Items</span>
-                                        </a>
-                                    </div>
-                                    <div class="menu-item">
-                                        <a class="menu-link {{ Route::is('uom.index') ? 'active' : '' }}" href="{{route('uom.index')}}">
-                                            <span class="menu-bullet">
-                                                <span class="bullet bullet-dot"></span>
-                                            </span>
-                                            <span class="menu-title">Unit Of Measure</span>
                                         </a>
                                     </div>
                                 </div>

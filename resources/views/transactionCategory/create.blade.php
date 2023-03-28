@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container-fluid">
-    <form action="{{ route('itemCategory.store') }}" method="POST" id="kt_create_pengeluaran">
+    <form action="{{ route('transactionCategory.store') }}" method="POST" id="kt_create_pengeluaran">
         @csrf
         <div class="row justify-content-center">
             <div class="col">
@@ -11,7 +11,7 @@
                         <div class="row mb-5">
                             <div class="col">
                                 <div class="form-group">
-                                    <label class="form-label required" for="jumlahStock">Nama Kategori</label>
+                                    <label class="form-label required" for="jumlahStock">Nama Kategori Transaksi</label>
                                     <input type="text" class="form-control form-control-solid" name="name" value="{{ old('name') }}">
                                     @include('layouts.error', ['name' => 'name'])
                                 </div>
