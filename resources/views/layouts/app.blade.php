@@ -60,21 +60,15 @@
                                     </span>
                                 </a>
                             </div>
-                            {{-- <div data-kt-menu-trigger="click" data-kt-menu-placement="right-start" class="menu-item py-3 {{ Route::is('transaction') ? 'here' : '' }} {{ Route::is('transaction.category') ? 'here' : '' }} "> --}}
-                            <div data-kt-menu-trigger="click" data-kt-menu-placement="right-start" class="menu-item py-3">
-                                <span class="menu-link" title="Kelola Transaksi" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
+
+                            <div data-kt-menu-trigger="click" data-kt-menu-placement="right-start" class="menu-item py-3 {{ Route::is('itemCategoryType.index') ? 'here' : '' }} {{ Route::is('itemCategory.index') ? 'here' : '' }} {{ Route::is('itemType.index') ? 'here' : '' }}">
+                                <span class="menu-link" title="Masterdata" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
                                     <span class="menu-icon">
-                                        <!--begin::Svg Icon | path: assets/media/icons/duotune/ecommerce/ecm004.svg-->
-                                        <span class="svg-icon svg-icon-2x">
+                                        <!--begin::Svg Icon | path: assets/media/icons/duotune/abstract/abs027.svg-->
+                                        <span class="svg-icon svg-icon-muted svg-icon-2x">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                            <path opacity="0.3" d="M18 10V20C18 20.6 18.4 21 19 21C19.6 21 20 20.6 20 20V10H18Z" fill="black"/>
-                                            <path opacity="0.3" d="M11 10V17H6V10H4V20C4 20.6 4.4 21 5 21H12C12.6 21 13 20.6 13 20V10H11Z" fill="black"/>
-                                            <path opacity="0.3" d="M10 10C10 11.1 9.1 12 8 12C6.9 12 6 11.1 6 10H10Z" fill="black"/>
-                                            <path opacity="0.3" d="M18 10C18 11.1 17.1 12 16 12C14.9 12 14 11.1 14 10H18Z" fill="black"/>
-                                            <path opacity="0.3" d="M14 4H10V10H14V4Z" fill="black"/>
-                                            <path opacity="0.3" d="M17 4H20L22 10H18L17 4Z" fill="black"/>
-                                            <path opacity="0.3" d="M7 4H4L2 10H6L7 4Z" fill="black"/>
-                                            <path d="M6 10C6 11.1 5.1 12 4 12C2.9 12 2 11.1 2 10H6ZM10 10C10 11.1 10.9 12 12 12C13.1 12 14 11.1 14 10H10ZM18 10C18 11.1 18.9 12 20 12C21.1 12 22 11.1 22 10H18ZM19 2H5C4.4 2 4 2.4 4 3V4H20V3C20 2.4 19.6 2 19 2ZM12 17C12 16.4 11.6 16 11 16H6C5.4 16 5 16.4 5 17C5 17.6 5.4 18 6 18H11C11.6 18 12 17.6 12 17Z" fill="black"/>
+                                                <path opacity="0.3" d="M21.25 18.525L13.05 21.825C12.35 22.125 11.65 22.125 10.95 21.825L2.75 18.525C1.75 18.125 1.75 16.725 2.75 16.325L4.04999 15.825L10.25 18.325C10.85 18.525 11.45 18.625 12.05 18.625C12.65 18.625 13.25 18.525 13.85 18.325L20.05 15.825L21.35 16.325C22.35 16.725 22.35 18.125 21.25 18.525ZM13.05 16.425L21.25 13.125C22.25 12.725 22.25 11.325 21.25 10.925L13.05 7.62502C12.35 7.32502 11.65 7.32502 10.95 7.62502L2.75 10.925C1.75 11.325 1.75 12.725 2.75 13.125L10.95 16.425C11.65 16.725 12.45 16.725 13.05 16.425Z" fill="black"/>
+                                                <path d="M11.05 11.025L2.84998 7.725C1.84998 7.325 1.84998 5.925 2.84998 5.525L11.05 2.225C11.75 1.925 12.45 1.925 13.15 2.225L21.35 5.525C22.35 5.925 22.35 7.325 21.35 7.725L13.05 11.025C12.45 11.325 11.65 11.325 11.05 11.025Z" fill="black"/>
                                             </svg>
                                         </span>
                                         <!--end::Svg Icon-->
@@ -83,31 +77,73 @@
                                 <div class="menu-sub menu-sub-dropdown w-225px px-1 py-4">
                                     <div class="menu-item">
                                         <div class="menu-content">
-                                            <span class="menu-section fs-5 fw-bolder ps-1 py-1">Transaksi</span>
+                                            <span class="menu-section fs-5 fw-bolder ps-1 py-1">Masterdata</span>
+                                        </div>
+                                    </div>
+                                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+                                        <span class="menu-link">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">Manajemen Kategori</span>
+                                            <span class="menu-arrow"></span>
+                                        </span>
+                                        <div class="menu-sub menu-sub-accordion">
+                                            <div class="menu-item">
+                                                <a class="menu-link {{ Route::is('itemCategoryType.index') ? 'active' : '' }}" href="{{ route('itemCategoryType.index') }}">
+                                                    <span class="menu-bullet">
+                                                        <span class="bullet bullet-dot"></span>
+                                                    </span>
+                                                    <span class="menu-title">Jenis Kategori</span>
+                                                </a>
+                                            </div>
+                                            <div class="menu-item">
+                                                <a class="menu-link {{ Route::is('itemCategory.index') ? 'active' : '' }}" href="{{ route('itemCategory.index') }}">
+                                                    <span class="menu-bullet">
+                                                        <span class="bullet bullet-dot"></span>
+                                                    </span>
+                                                    <span class="menu-title">Kategori</span>
+                                                </a>
+                                            </div>
+                                            <div class="menu-item">
+                                                <a class="menu-link {{ Route::is('itemType.index') ? 'active' : '' }}" href="{{ route('itemType.index') }}">
+                                                    <span class="menu-bullet">
+                                                        <span class="bullet bullet-dot"></span>
+                                                    </span>
+                                                    <span class="menu-title">Jenis Barang</span>
+                                                </a>
+                                            </div>
+                                            <div class="menu-item">
+                                               <a class="menu-link" href="#">
+                                                    <span class="menu-bullet">
+                                                        <span class="bullet bullet-dot"></span>
+                                                    </span>
+                                                    <span class="menu-title">Kategori Transaksi</span>
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="menu-item">
-                                        {{-- <a class="menu-link {{ Route::is('product.index') ? 'active' : '' }}" href="{{route('transaction')}}"> --}}
                                         <a class="menu-link" href="#">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
-                                            <span class="menu-title">Kelola Transaksi</span>
+                                            <span class="menu-title">Customer</span>
                                         </a>
                                     </div>
                                     <div class="menu-item">
-                                        {{-- <a class="menu-link {{ Route::is('transaction.category') ? 'active' : '' }}" href="{{route('transaction.category')}}"> --}}
                                         <a class="menu-link" href="#">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
-                                            <span class="menu-title">List Kategori Transaksi</span>
+                                            <span class="menu-title">Supplyer</span>
                                         </a>
                                     </div>
                                 </div>
                             </div>
-                            <div data-kt-menu-trigger="click" data-kt-menu-placement="right-start" class="menu-item py-3 {{ Route::is('item.index') ? 'here' : '' }} {{ Route::is('itemType.index') ? 'here' : '' }} {{ Route::is('uom.index') ? 'here' : '' }}">
-                                <span class="menu-link" title="Barang" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
+
+                            <div data-kt-menu-trigger="click" data-kt-menu-placement="right-start" class="menu-item py-3">
+                                <span class="menu-link" title="Manajemen Items" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
                                     <span class="menu-icon">
                                         <!--begin::Svg Icon | path: assets/media/icons/duotune/ecommerce/ecm009.svg-->
                                         <span class="svg-icon svg-icon-muted svg-icon-2x">
@@ -128,7 +164,7 @@
                                 <div class="menu-sub menu-sub-dropdown w-225px px-1 py-4">
                                     <div class="menu-item">
                                         <div class="menu-content">
-                                            <span class="menu-section fs-5 fw-bolder ps-1 py-1">Barang</span>
+                                            <span class="menu-section fs-5 fw-bolder ps-1 py-1">Manajemen Items</span>
                                         </div>
                                     </div>
                                     <div class="menu-item">
@@ -136,7 +172,7 @@
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
-                                            <span class="menu-title">Kelola Barang</span>
+                                            <span class="menu-title">Stock Items</span>
                                         </a>
                                     </div>
                                     <div class="menu-item">
@@ -144,7 +180,7 @@
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
-                                            <span class="menu-title">Kelola Kategori Barang</span>
+                                            <span class="menu-title">History Stock Items</span>
                                         </a>
                                     </div>
                                     <div class="menu-item">
@@ -155,19 +191,64 @@
                                             <span class="menu-title">Unit Of Measure</span>
                                         </a>
                                     </div>
-                                    {{-- <div class="menu-item">
-                                        <a class="menu-link {{ Route::is('transaction.history') ? 'active' : '' }}" href="{{route('transaction.history')}}">
+                                </div>
+                            </div>
+
+                            <div data-kt-menu-trigger="click" data-kt-menu-placement="right-start" class="menu-item py-3">
+                                <span class="menu-link" title="Manajemen Items" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
+                                    <span class="menu-icon">
+                                        <!--begin::Svg Icon | path: assets/media/icons/duotune/ecommerce/ecm004.svg-->
+                                        <span class="svg-icon svg-icon-muted svg-icon-2hx">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <path opacity="0.3" d="M18 10V20C18 20.6 18.4 21 19 21C19.6 21 20 20.6 20 20V10H18Z" fill="black"/>
+                                                <path opacity="0.3" d="M11 10V17H6V10H4V20C4 20.6 4.4 21 5 21H12C12.6 21 13 20.6 13 20V10H11Z" fill="black"/>
+                                                <path opacity="0.3" d="M10 10C10 11.1 9.1 12 8 12C6.9 12 6 11.1 6 10H10Z" fill="black"/>
+                                                <path opacity="0.3" d="M18 10C18 11.1 17.1 12 16 12C14.9 12 14 11.1 14 10H18Z" fill="black"/>
+                                                <path opacity="0.3" d="M14 4H10V10H14V4Z" fill="black"/>
+                                                <path opacity="0.3" d="M17 4H20L22 10H18L17 4Z" fill="black"/>
+                                                <path opacity="0.3" d="M7 4H4L2 10H6L7 4Z" fill="black"/>
+                                                <path d="M6 10C6 11.1 5.1 12 4 12C2.9 12 2 11.1 2 10H6ZM10 10C10 11.1 10.9 12 12 12C13.1 12 14 11.1 14 10H10ZM18 10C18 11.1 18.9 12 20 12C21.1 12 22 11.1 22 10H18ZM19 2H5C4.4 2 4 2.4 4 3V4H20V3C20 2.4 19.6 2 19 2ZM12 17C12 16.4 11.6 16 11 16H6C5.4 16 5 16.4 5 17C5 17.6 5.4 18 6 18H11C11.6 18 12 17.6 12 17Z" fill="black"/>
+                                            </svg>
+                                        </span>
+                                        <!--end::Svg Icon-->
+                                    </span>
+                                </span>
+                                <div class="menu-sub menu-sub-dropdown w-225px px-1 py-4">
+                                    <div class="menu-item">
+                                        <div class="menu-content">
+                                            <span class="menu-section fs-5 fw-bolder ps-1 py-1">Manajemen Transaksi</span>
+                                        </div>
+                                    </div>
+                                    <div class="menu-item">
+                                        <a class="menu-link" href="#">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
-                                            <span class="menu-title">Riwayat Barang</span>
+                                            <span class="menu-title">Transaksi Items In/Out</span>
                                         </a>
-                                    </div> --}}
+                                    </div>
+                                    <div class="menu-item">
+                                        <a class="menu-link" href="#">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">Transaksi Stock In/Out</span>
+                                        </a>
+                                    </div>
+                                    <div class="menu-item">
+                                        <a class="menu-link" href="#">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">History Transaksi</span>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
+
                             {{-- <div data-kt-menu-trigger="click" data-kt-menu-placement="right-start" class="menu-item py-3 {{ Route::is('laporan.pemasukan') ? 'here' : '' }} {{ Route::is('laporan.pengeluaran') ? 'here' : '' }} {{ Route::is('laporan.persediaan') ? 'here' : '' }} {{ Route::is('laporan.labaRugi') ? 'here' : '' }}  "> --}}
                             <div data-kt-menu-trigger="click" data-kt-menu-placement="right-start" class="menu-item py-3">
-                                <span class="menu-link" title="Laporan" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
+                                <span class="menu-link" title="Reporting" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
                                     <span class="menu-icon">
                                         <!--begin::Svg Icon | path: assets/media/icons/duotune/graphs/gra001.svg-->
                                         <span class="svg-icon svg-icon-muted svg-icon-2x">
@@ -209,7 +290,58 @@
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
-                                            <span class="menu-title">Laporan Persediaan Barang</span>
+                                            <span class="menu-title">Laporan Transaksi Stock</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div data-kt-menu-trigger="click" data-kt-menu-placement="right-start" class="menu-item py-3">
+                                <span class="menu-link" title="User Management" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
+                                    <span class="menu-icon">
+                                        <!--begin::Svg Icon | path: assets/media/icons/duotune/communication/com014.svg-->
+                                        <span class="svg-icon svg-icon-muted svg-icon-2x">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <path d="M16.0173 9H15.3945C14.2833 9 13.263 9.61425 12.7431 10.5963L12.154 11.7091C12.0645 11.8781 12.1072 12.0868 12.2559 12.2071L12.6402 12.5183C13.2631 13.0225 13.7556 13.6691 14.0764 14.4035L14.2321 14.7601C14.2957 14.9058 14.4396 15 14.5987 15H18.6747C19.7297 15 20.4057 13.8774 19.912 12.945L18.6686 10.5963C18.1487 9.61425 17.1285 9 16.0173 9Z" fill="black"/>
+                                                <rect opacity="0.3" x="14" y="4" width="4" height="4" rx="2" fill="black"/>
+                                                <path d="M4.65486 14.8559C5.40389 13.1224 7.11161 12 9 12C10.8884 12 12.5961 13.1224 13.3451 14.8559L14.793 18.2067C15.3636 19.5271 14.3955 21 12.9571 21H5.04292C3.60453 21 2.63644 19.5271 3.20698 18.2067L4.65486 14.8559Z" fill="black"/>
+                                                <rect opacity="0.3" x="6" y="5" width="6" height="6" rx="3" fill="black"/>
+                                            </svg>
+                                        </span>
+                                        <!--end::Svg Icon-->
+                                    </span>
+                                </span>
+                                <div class="menu-sub menu-sub-dropdown w-225px px-1 py-4">
+                                    <div class="menu-item">
+                                        <div class="menu-content">
+                                            <span class="menu-section fs-5 fw-bolder ps-1 py-1">User Management</span>
+                                        </div>
+                                    </div>
+                                    <div class="menu-item">
+                                        {{-- <a class="menu-link {{ Route::is('product.index') ? 'active' : '' }}" href="{{route('laporan.pemasukan')}}"> --}}
+                                        <a class="menu-link" href="#">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">Users</span>
+                                        </a>
+                                    </div>
+                                    <div class="menu-item">
+                                        {{-- <a class="menu-link {{ Route::is('products.category') ? 'active' : '' }}" href="{{route('products.category')}}"> --}}
+                                        <a class="menu-link" href="#">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">Menu Management</span>
+                                        </a>
+                                    </div>
+                                    <div class="menu-item">
+                                        {{-- <a class="menu-link {{ Route::is('products.category') ? 'active' : '' }}" href="{{route('products.category')}}"> --}}
+                                        <a class="menu-link" href="#">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">Role Management</span>
                                         </a>
                                     </div>
                                 </div>

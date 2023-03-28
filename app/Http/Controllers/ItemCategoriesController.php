@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ItemType;
+use App\Models\ItemCategories;
+use App\Models\ItemCategoryType;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB;
 
-class ItemTypeController extends Controller
+class ItemCategoriesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,15 +19,15 @@ class ItemTypeController extends Controller
     public function index()
     {
         //
-        $breadcumb = "Jenis Barang";
+        $breadcumb = "Kategori";
 
-        $itemTypes = ItemType::when(request('search'), function($query){
+        $itemCategories = ItemCategories::with('itemCategoryType')->when(request('search'), function($query){
             return $query->where('name','like','%'.request('search').'%');
         })
         ->orderBy('created_at','desc')
         ->paginate(10);
         
-        return view('itemType.index', compact('breadcumb', 'itemTypes'));
+        return view('itemCategory.index', compact('breadcumb', 'itemCategories'));
     }
 
     /**
@@ -37,9 +38,11 @@ class ItemTypeController extends Controller
     public function create()
     {
         //
-        $breadcumb = "Form Tambah Jenis Barang";
+        $breadcumb = "Form Tambah Kategori";
+
+        $itemCategoryType = ItemCategoryType::get();
         
-        return view('itemType.create', compact('breadcumb'));
+        return view('itemCategory.create', compact('breadcumb', 'itemCategoryType'));
     }
 
     /**
@@ -53,20 +56,22 @@ class ItemTypeController extends Controller
         // dd($request->all());
 
         $this->validate($request, [
-            'itemTypeName' => 'required'
+            'itemCategoryTypeId' => 'required',
+            'name' => 'required'
         ]);
 
         DB::beginTransaction();
 
         try{
 
-            ITemType::create([
-                'name' => $request->itemTypeName,
+            ItemCategories::create([
+                'item_category_type_id' => $request->itemCategoryTypeId,
+                'name' => $request->name,
                 'description' => $request->description, 
             ]);
 
             DB::commit();   
-            return redirect()->route('itemType.index')->with('success','Data berhasil disimpan');
+            return redirect()->route('itemCategory.index')->with('success','Data berhasil disimpan');
 
         } catch(\Exeception $e) {
 
@@ -81,10 +86,10 @@ class ItemTypeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\ItemType  $itemType
+     * @param  \App\Models\ItemCategories  $itemCategories
      * @return \Illuminate\Http\Response
      */
-    public function show(ItemType $itemType)
+    public function show(ItemCategories $itemCategories)
     {
         //
     }
@@ -92,32 +97,33 @@ class ItemTypeController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\ItemType  $itemType
+     * @param  \App\Models\ItemCategories  $itemCategories
      * @return \Illuminate\Http\Response
      */
-    public function edit($id, ItemType $itemType)
+    public function edit($id, ItemCategories $itemCategories)
     {
         // dd($id);
         $breadcumb = "Edit Kategori";
 
-        $itemType = $itemType->find($id);
+        $itemCategory = $itemCategories->find($id);
                     
-        return view('itemType.edit', compact('breadcumb', 'itemType'));
+        return view('itemCategory.edit', compact('breadcumb', 'itemCategory'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\ItemType  $itemType
+     * @param  \App\Models\ItemCategories  $itemCategories
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ItemType $itemType)
+    public function update(Request $request, ItemCategories $itemCategories)
     {
         // dd($request->all());
 
         $this->validate($request, [
-            'itemTypeName' => 'required'
+            'itemCategoryTypeId' => 'required',
+            'name' => 'required'
         ]);
 
         DB::beginTransaction();
@@ -125,11 +131,12 @@ class ItemTypeController extends Controller
         try{
 
             $data = [
-                'name' => $request->itemTypeName,
+                'item_category_type_id' => $request->itemCategoryTypeId,
+                'name' => $request->name,
                 'description' => $request->description
             ];
 
-            $itemType->find($request->id)->update($data);
+            $itemCategories->find($request->id)->update($data);
 
             DB::commit();   
             return redirect()->back()->with('success','Data Berhasil Disimpan'); 
@@ -141,28 +148,28 @@ class ItemTypeController extends Controller
                 
         }
 
-        return redirect()->back()->with('error','Data gagal disimpan');
+        return redirect()->back()->with('error','Data gagal disimpan'); 
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\ItemType  $itemType
+     * @param  \App\Models\ItemCategories  $itemCategories
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id, ItemType $itemType)
+    public function destroy($id, ItemCategories $itemCategories)
     {
         DB::beginTransaction();
 
         try{
-            $itemType->find($id)->delete();     
+            $itemCategories->find($id)->delete();     
 
             DB::commit();
-            return redirect()->route('itemType.index')->with('success','Kagegori berhasil dihapus');                             
+            return redirect()->route('itemCategory.index')->with('success','Kagegori berhasil dihapus');                             
         }
         catch(\Exeception $e){
             DB::rollback();      
-            return redirect()->route('itemType.index')->with('error',$e);      
-        }
+            return redirect()->route('itemCategory.index')->with('error', $e);      
+        }  
     }
 }

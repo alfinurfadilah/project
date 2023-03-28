@@ -8,7 +8,7 @@
         <!--begin::Card title-->
         <div class="card-title">
             <!--begin::Search-->
-            <form action="{{ route('itemType.index') }}" method="get">
+            <form action="{{ route('itemCategoryType.index') }}" method="get">
                 <div class="d-flex align-items-center position-relative my-1">
                     <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
                     <span class="svg-icon svg-icon-1 position-absolute ms-6">
@@ -18,7 +18,7 @@
                         </svg>
                     </span>
                     <!--end::Svg Icon-->
-                    <input type="text" name="search" class="form-control form-control-solid w-250px ps-15" placeholder="Cari Jenis Barang" onblur="this.form.submit()">
+                    <input type="text" name="search" class="form-control form-control-solid w-250px ps-15" placeholder="Cari Jenis Kategori" onblur="this.form.submit()">
                 </div>
             </form>
             <!--end::Search-->
@@ -29,7 +29,7 @@
             <!--begin::Toolbar-->
             <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base">
                 <!--begin::Add customer-->
-                <a href="{{ route('itemType.create')}}" class="btn btn-primary">Tambah Jenis Barang</a>
+                <a href="{{ route('itemCategoryType.create')}}" class="btn btn-primary">Tambah Jenis Kategori</a>
                 <!--end::Add customer-->
             </div>
             <!--end::Toolbar-->
@@ -53,13 +53,13 @@
                             <thead>
                                 <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
                                     <th>No</th>
-                                    <th>Nama Jenis Barang</th>
+                                    <th>Nama Jenis Kategori</th>
                                     <th>Deskripsi</th>
                                     <th class="text-end min-w-70px">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($itemTypes as $index=>$item)
+                                @foreach ($itemCategoryType as $index=>$item)
                                 <tr>
                                     <td>{{$index+1}}</td>
                                     <td>{{$item->name}}</td>
@@ -80,17 +80,17 @@
                                         <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
                                             <!--begin::Menu item-->
                                             <div class="menu-item px-3">
-                                                <a href="{{ route('itemType.edit', $item->id) }}" class="menu-link px-3">Edit</a>
+                                                <a href="{{ route('itemCategoryType.edit', $item->id) }}" class="menu-link px-3">Edit</a>
                                             </div>
                                             <!--end::Menu item-->
 
                                             <!--begin::Delete button-->
-                                            <form action="{{ route('itemType.delete', $item->id ) }}" method="POST" id="deleteForm{{ $item->id }}">
+                                            <form action="{{ route('itemCategoryType.delete', $item->id ) }}" method="POST" id="deleteForm{{ $item->id }}">
                                                 @method('delete')
                                                 @csrf
                                                 <!--begin::Menu item-->
                                                 <div class="menu-item px-3">
-                                                    <a onclick="onDelete({{$item->id}}, '{{$item->uom_name}}')" class="menu-link px-3">Hapus</a>
+                                                    <a onclick="onDelete({{$item->id}}, '{{$item->name}}')" class="menu-link px-3">Hapus</a>
                                                 </div>
                                                 <!--end::Menu item-->
                                             </form>

@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container-fluid">
-    <form action="{{ route('itemType.store') }}" method="POST" id="kt_create_pengeluaran">
+    <form action="{{ route('customer.store') }}" method="POST" id="kt_create_pengeluaran">
         @csrf
         <div class="row justify-content-center">
             <div class="col">
@@ -11,16 +11,25 @@
                         <div class="row mb-5">
                             <div class="col">
                                 <div class="form-group">
-                                    <label class="form-label required" for="jumlahStock">Nama Jenis Barang</label>
-                                    <input type="text" class="form-control form-control-solid" name="itemTypeName" value="{{ old('itemTypeName') }}">
-                                    @include('layouts.error', ['name' => 'itemTypeName'])
+                                    <label class="form-label required" for="jumlahStock">Nama Customer</label>
+                                    <input type="text" class="form-control form-control-solid" name="namaUom" value="{{ old('namaUom') }}">
+                                    @include('layouts.error', ['name' => 'namaUom'])
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-5">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label class="form-label required" for="jumlahStock">Simbol</label>
+                                    <input type="text" class="form-control form-control-solid" name="simbol" value="{{ old('simbol') }}">
+                                    @include('layouts.error', ['name' => 'simbol'])
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col">
                                 <div class="form-group">
-                                    <label class="form-label" for="description">Deskripsi</label>
+                                    <label class="form-label" for="description">Deskripsi Satuan</label>
                                     <textarea name="description" cols="30" rows="10" class="form-control form-control-solid">{{ old('description') }}</textarea>
                                     @include('layouts.error', ['name' => 'description'])
                                 </div>

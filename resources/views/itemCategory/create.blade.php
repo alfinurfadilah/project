@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container-fluid">
-    <form action="{{ route('itemType.store') }}" method="POST" id="kt_create_pengeluaran">
+    <form action="{{ route('itemCategory.store') }}" method="POST" id="kt_create_pengeluaran">
         @csrf
         <div class="row justify-content-center">
             <div class="col">
@@ -11,9 +11,23 @@
                         <div class="row mb-5">
                             <div class="col">
                                 <div class="form-group">
-                                    <label class="form-label required" for="jumlahStock">Nama Jenis Barang</label>
-                                    <input type="text" class="form-control form-control-solid" name="itemTypeName" value="{{ old('itemTypeName') }}">
-                                    @include('layouts.error', ['name' => 'itemTypeName'])
+                                    <label class="form-label required" for="kategoriBarang">Jenis Kategori</label>
+                                    <select name="itemCategoryTypeId" aria-label="Pilih Kategori" data-control="select2" data-placeholder="Pilih Kategori..." data-dropdown-parent="#kt_create_pengeluaran" class="form-select form-select-solid fw-bolder">
+                                        <option value="">Pilih Kategori...</option>
+                                        @foreach ($itemCategoryType as $index=>$value)
+                                            <option value="{{ $value->id }}">{{ $value->name}}</option>
+                                        @endforeach
+                                    </select>
+                                    @include('layouts.error', ['name' => 'itemCategoryTypeId'])
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-5">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label class="form-label required" for="jumlahStock">Nama Kategori</label>
+                                    <input type="text" class="form-control form-control-solid" name="name" value="{{ old('name') }}">
+                                    @include('layouts.error', ['name' => 'name'])
                                 </div>
                             </div>
                         </div>

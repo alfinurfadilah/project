@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ItemType;
+use App\Models\Customer;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB;
 
-class ItemTypeController extends Controller
+class CustomerController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,15 +18,15 @@ class ItemTypeController extends Controller
     public function index()
     {
         //
-        $breadcumb = "Jenis Barang";
+        $breadcumb = "Customer";
 
-        $itemTypes = ItemType::when(request('search'), function($query){
+        $customers= Customer::when(request('search'), function($query){
             return $query->where('name','like','%'.request('search').'%');
         })
         ->orderBy('created_at','desc')
         ->paginate(10);
         
-        return view('itemType.index', compact('breadcumb', 'itemTypes'));
+        return view('customer.index', compact('breadcumb', 'customers'));
     }
 
     /**
@@ -37,9 +37,9 @@ class ItemTypeController extends Controller
     public function create()
     {
         //
-        $breadcumb = "Form Tambah Jenis Barang";
+        $breadcumb = "Form Tambah Customer";
         
-        return view('itemType.create', compact('breadcumb'));
+        return view('customer.create', compact('breadcumb'));
     }
 
     /**
@@ -53,20 +53,23 @@ class ItemTypeController extends Controller
         // dd($request->all());
 
         $this->validate($request, [
-            'itemTypeName' => 'required'
+            'name' => 'required',
+            'phone' => 'required'
         ]);
 
         DB::beginTransaction();
 
         try{
 
-            ITemType::create([
-                'name' => $request->itemTypeName,
-                'description' => $request->description, 
+            Customer::create([
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'email' => $request->email, 
+                'address' => $request->address 
             ]);
 
-            DB::commit();   
-            return redirect()->route('itemType.index')->with('success','Data berhasil disimpan');
+            DB::commit();
+            return redirect()->route('customer.index')->with('success','Data berhasil disimpan');
 
         } catch(\Exeception $e) {
 
@@ -81,10 +84,10 @@ class ItemTypeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\ItemType  $itemType
+     * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function show(ItemType $itemType)
+    public function show(Customer $customer)
     {
         //
     }
@@ -92,32 +95,33 @@ class ItemTypeController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\ItemType  $itemType
+     * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function edit($id, ItemType $itemType)
+    public function edit($id, Customer $customer)
     {
         // dd($id);
-        $breadcumb = "Edit Kategori";
+        $breadcumb = "Edit Customer";
 
-        $itemType = $itemType->find($id);
+        $customer = $customer->find($id);
                     
-        return view('itemType.edit', compact('breadcumb', 'itemType'));
+        return view('customer.edit', compact('breadcumb', 'customer'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\ItemType  $itemType
+     * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ItemType $itemType)
+    public function update(Request $request, Customer $customer)
     {
         // dd($request->all());
 
         $this->validate($request, [
-            'itemTypeName' => 'required'
+            'name' => 'required',
+            'phone' => 'required'
         ]);
 
         DB::beginTransaction();
@@ -125,11 +129,13 @@ class ItemTypeController extends Controller
         try{
 
             $data = [
-                'name' => $request->itemTypeName,
-                'description' => $request->description
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'email' => $request->email,
+                'address' => $request->address
             ];
 
-            $itemType->find($request->id)->update($data);
+            $customer->find($request->id)->update($data);
 
             DB::commit();   
             return redirect()->back()->with('success','Data Berhasil Disimpan'); 
@@ -141,28 +147,29 @@ class ItemTypeController extends Controller
                 
         }
 
-        return redirect()->back()->with('error','Data gagal disimpan');
+        return redirect()->back()->with('error','Data gagal disimpan'); 
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\ItemType  $itemType
+     * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id, ItemType $itemType)
+    public function destroy($id, Customer $customer)
     {
+        //
         DB::beginTransaction();
 
         try{
-            $itemType->find($id)->delete();     
+            $customer->find($id)->delete();     
 
             DB::commit();
-            return redirect()->route('itemType.index')->with('success','Kagegori berhasil dihapus');                             
+            return redirect()->route('customer.index')->with('success','Customer berhasil dihapus');                             
         }
         catch(\Exeception $e){
             DB::rollback();      
-            return redirect()->route('itemType.index')->with('error',$e);      
-        }
+            return redirect()->route('customer.index')->with('error',$e);      
+        }  
     }
 }

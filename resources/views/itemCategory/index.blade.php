@@ -8,7 +8,7 @@
         <!--begin::Card title-->
         <div class="card-title">
             <!--begin::Search-->
-            <form action="{{ route('itemType.index') }}" method="get">
+            <form action="{{ route('itemCategory.index') }}" method="get">
                 <div class="d-flex align-items-center position-relative my-1">
                     <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
                     <span class="svg-icon svg-icon-1 position-absolute ms-6">
@@ -18,7 +18,7 @@
                         </svg>
                     </span>
                     <!--end::Svg Icon-->
-                    <input type="text" name="search" class="form-control form-control-solid w-250px ps-15" placeholder="Cari Jenis Barang" onblur="this.form.submit()">
+                    <input type="text" name="search" class="form-control form-control-solid w-250px ps-15" placeholder="Cari Jenis Kategori" onblur="this.form.submit()">
                 </div>
             </form>
             <!--end::Search-->
@@ -29,7 +29,7 @@
             <!--begin::Toolbar-->
             <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base">
                 <!--begin::Add customer-->
-                <a href="{{ route('itemType.create')}}" class="btn btn-primary">Tambah Jenis Barang</a>
+                <a href="{{ route('itemCategory.create')}}" class="btn btn-primary">Tambah Kategori</a>
                 <!--end::Add customer-->
             </div>
             <!--end::Toolbar-->
@@ -53,44 +53,51 @@
                             <thead>
                                 <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
                                     <th>No</th>
-                                    <th>Nama Jenis Barang</th>
+                                    <th>Nama Kategori</th>
                                     <th>Deskripsi</th>
                                     <th class="text-end min-w-70px">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($itemTypes as $index=>$item)
+                                @foreach ($itemCategories as $index=>$item)
                                 <tr>
                                     <td>{{$index+1}}</td>
                                     <td>{{$item->name}}</td>
+                                    <td>{{$item->itemCategoryType->name}}</td>
                                     <td>{{$item->description}}</td>
                                     <!--begin::Action=-->
                                     <td class="text-end">
-                                        <a href="#" class="btn btn-sm btn-light btn-active-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                                            Actions
+                                        <a href="#" class="btn btn-sm btn-light btn-active-light-primary"
+                                            data-kt-menu-trigger="click"
+                                            data-kt-menu-placement="bottom-end">Actions
                                             <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
                                             <span class="svg-icon svg-icon-5 m-0">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                    <path d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z" fill="black" />
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none">
+                                                    <path
+                                                        d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z"
+                                                        fill="black" />
                                                 </svg>
                                             </span>
                                             <!--end::Svg Icon-->
                                         </a>
                                         <!--begin::Menu-->
-                                        <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
+                                        <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4"
+                                            data-kt-menu="true">
                                             <!--begin::Menu item-->
                                             <div class="menu-item px-3">
-                                                <a href="{{ route('itemType.edit', $item->id) }}" class="menu-link px-3">Edit</a>
+                                                <a href="{{ route('itemCategory.edit', $item->id) }}" class="menu-link px-3">Edit</a>
                                             </div>
                                             <!--end::Menu item-->
 
+
                                             <!--begin::Delete button-->
-                                            <form action="{{ route('itemType.delete', $item->id ) }}" method="POST" id="deleteForm{{ $item->id }}">
+                                            <form action="{{ route('itemCategory.delete', $item->id ) }}" method="POST" id="deleteitemCategory{{ $item->id }}">
                                                 @method('delete')
                                                 @csrf
                                                 <!--begin::Menu item-->
                                                 <div class="menu-item px-3">
-                                                    <a onclick="onDelete({{$item->id}}, '{{$item->uom_name}}')" class="menu-link px-3">Hapus</a>
+                                                    <a onclick="onDelete({{$item->id}}, '{{$item->name}}')" class="menu-link px-3">Hapus</a>
                                                 </div>
                                                 <!--end::Menu item-->
                                             </form>
@@ -140,7 +147,7 @@
             // IF User Choose Cancel
             if (!isConfirm.isConfirmed) return;
 
-            document.getElementById('deleteForm'+id).submit();
+            document.getElementById('deleteitemCategory'+id).submit();
 
         });
     }
