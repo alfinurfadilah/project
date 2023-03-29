@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('img_url');
             $table->integer('discount');
             $table->text('description');
+            $table->integer('created_by');
             $table->integer('updated_by');
             $table->softDeletes();
             $table->timestamps();

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
+use App\Models\ItemQty;
+use App\Models\ItemPrice;
 use App\Models\ItemCategories;
 use App\Models\ItemType;
 use App\Models\Uom;
@@ -60,7 +62,66 @@ class ItemController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
+
+        $this->validate($request, [
+            'namaBarang' => 'required|min:2|max:200',
+            'kodeBarang' => 'required',
+        ]);
+
+        if($request->has('image')){
+            // dd("keisni");
+            $gambar = $request->image;
+            $new_gambar = time().$gambar->getClientOriginalName();
+
+
+            $item = Item::create([
+                'item_category_id' => $request->itemCategoryId,
+                'item_type_id' => $request->itemTypeId,
+                'uom_id' => $request->uomId,
+                'code' => $request->kodeBarang,
+                'name' => $request->namaBarang,
+                'img_url' => 'uploads/images/'.$new_gambar,
+                'description' => $request->description,
+                'created_by' => Auth::id(),
+
+                // 'category_id' => $request->kategoriBarang,
+                // 'harga_jual' => str_replace("Rp ", "", str_replace(",", "", $request->hargaJual)),
+                // 'harga_modal' => str_replace("Rp ", "", str_replace(",", "", $request->hargaModal)),
+                // 'qty' => $request->qty,
+            ]);        
+
+            Image::make($gambar->getRealPath())->resize(null, 200, function ($constraint) {
+                $constraint->aspectRatio();
+            })->save(public_path('uploads/images/' . $new_gambar));
+        } else {
+            dd("kesini 2");
+            $item = Item::create([
+                'item_category_id' => $request->itemCategoryId,
+                'item_type_id' => $request->itemTypeId,
+                'uom_id' => $request->uomId,
+                'code' => $request->kodeBarang,
+                'name' => $request->namaBarang,
+                'description' => $request->description,
+                'created_by' => Auth::id(),
+            ]);
+        }
+
+        ItemQty::create([
+            'item_id' => $item->id,
+            'qty' => $request->qty
+        ]);
+
+        ItemPrice::create([
+            'item_id' => $item->id,
+            'buy_price' => $request->hargaModal,
+            'sell_price' => $request->hargaJual
+        ]);
+
+        $message = 'Data Berhasil di simpan';
+
+        DB::commit();
+        return redirect()->route('item.index')->with('success', $message);  
     }
 
     /**

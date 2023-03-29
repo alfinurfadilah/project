@@ -116,9 +116,20 @@
                                     <div class="fv-row mb-10">
                                         <div class="col">
                                             <div class="form-group">
+                                                <label class="form-label required" for="kodeBarang">Kode Barang</label>
+                                                <input type="text" class="form-control form-control-solid" name="kodeBarang" value="{{ old('kodeBarang') }}">
+                                                @include('layouts.error', ['name' => 'kodeBarang'])
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="fv-row mb-10">
+                                        <div class="col">
+                                            <div class="form-group">
                                                 <label class="form-label required" for="namaBarang">Nama Barang</label>
                                                 <input type="text" class="form-control form-control-solid" name="namaBarang" value="{{ old('namaBarang') }}">
-                                                @include('layouts.error', ['name' => 'name'])
+                                                @include('layouts.error', ['name' => 'namaBarang'])
                                             </div>
                                         </div>
                                     </div>
@@ -126,6 +137,23 @@
                             </div>
 
                             <div class="row">
+
+                                <div class="col">
+                                    <div class="fv-row mb-10">
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label class="form-label required" for="kategoriBarang">Jenis Satuan</label>
+                                                <select name="uomId" aria-label="Pilih Satuan" data-control="select2" data-placeholder="Pilih Satuan..." data-dropdown-parent="#kt_create_product_form" class="form-control form-select form-select-solid fw-bolder">
+                                                    <option value="">Pilih Satuan...</option>
+                                                    @foreach ($uom as $index=>$value)
+                                                        <option value="{{ $value->id }}">{{ $value->symbol}}</option>
+                                                    @endforeach
+                                                </select>
+                                                @include('layouts.error', ['name' => 'uomId'])
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 
                                 <div class="col">
                                     <div class="fv-row mb-10">
@@ -144,6 +172,9 @@
                                     </div>
                                 </div>
 
+                            </div>
+
+                            <div class="row">
                                 <div class="col">
                                     <div class="fv-row mb-10">
                                         <div class="col">
@@ -160,15 +191,16 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="fv-row mb-5">
                                 <div class="col">
-                                    <div class="form-group">
-                                        <label class="form-label" for="gambarBarang">Gambar Barang</label>
-                                        <input name="image" id="image" type="file" class="form-control" accept="image/*" onchange ="document.getElementById('output').src = window.URL.createObjectURL(this.files[0])">
-                                        <div class="col mb-10-sm-12 mt-5"><img id="output" src="" class="img-fluid"></div>
-                                        @include('layouts.error', ['name' => 'image'])
+                                    <div class="fv-row mb-5">
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label class="form-label" for="gambarBarang">Gambar Barang</label>
+                                                <input name="image" id="image" type="file" class="form-control" accept="image/*" onchange ="document.getElementById('output').src = window.URL.createObjectURL(this.files[0])">
+                                                <div class="col mb-10-sm-12 mt-5"><img id="output" src="" class="img-fluid"></div>
+                                                @include('layouts.error', ['name' => 'image'])
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -357,10 +389,24 @@
         form,
         {
             fields: {
+                'kodeBarang': {
+                    validators: {
+                        notEmpty: {
+                            message: 'Kode barang harus di isi'
+                        }
+                    }
+                },
                 'namaBarang': {
                     validators: {
                         notEmpty: {
                             message: 'Nama barang harus di isi'
+                        }
+                    }
+                },
+                'uomId': {
+                    validators: {
+                        notEmpty: {
+                            message: 'Pilih salah satu satuan barang'
                         }
                     }
                 },

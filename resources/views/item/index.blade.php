@@ -78,7 +78,7 @@
                                 <div class="d-flex align-items-sm-center">
                                     <!--begin::Symbol-->
                                     <div class="symbol symbol-60px symbol-2by2 me-4">
-                                        <div class="symbol-label" style="background-image: url('{{ $item->image ?? asset('themes/metronic-demo9/media/illustrations/dozzy-1/13.png') }}')"></div>
+                                        <div class="symbol-label" style="background-image: url('{{ $item->img_url ?? asset('themes/metronic-demo9/media/illustrations/dozzy-1/13.png') }}')"></div>
                                     </div>
                                     <!--end::Symbol-->
                                     <!--begin::Content-->
@@ -91,7 +91,7 @@
                                         <!--begin::Section-->
                                         <div class="d-flex align-items-center">
                                             <div class="me-4">
-                                                <a href="{{ route('items.edit', $item->id) }}" class="btn btn-icon btn-secondary btn-sm">
+                                                <a href="{{ route('item.edit', $item->id) }}" class="btn btn-icon btn-secondary btn-sm">
                                                     <!--begin::Svg Icon | path: assets/media/icons/duotune/general/gen055.svg-->
                                                     <span class="svg-icon svg-icon-muted svg-icon-1x">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -105,7 +105,7 @@
                                             </div>
 
                                             <!--begin::Delete button-->
-                                            <form action="{{ route('items.destroy', $item->id ) }}" method="POST">
+                                            <form action="{{ route('item.delete', $item->id ) }}" method="POST">
                                                 @method('delete')
                                                 @csrf
                                                 <!--begin::Toolbar-->
@@ -129,7 +129,7 @@
                                     <!--end::Content-->
                                 </div>
                             </td>
-                            <td>{{ $item->category->category_name }}</td>
+                            <td>kategori nnya apa</td>
                             <td>
                                 @php
                                     if ($item->qty <= 10) {

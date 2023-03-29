@@ -29,6 +29,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/item', [App\Http\Controllers\ItemController::class, 'index'])->name('item.index');
     Route::get('/item/create', [App\Http\Controllers\ItemController::class, 'create'])->name('item.create');
     Route::post('/item/store', [App\Http\Controllers\ItemController::class, 'store'])->name('item.store');
+    Route::get('/item/edit/{id}', [App\Http\Controllers\ItemController::class, 'edit'])->name('item.edit');
+    Route::post('/item/update', [App\Http\Controllers\ItemController::class, 'update'])->name('item.update');
+    Route::post('/item/delete/{id}', [App\Http\Controllers\ItemController::class, 'delete'])->name('item.delete');
 
     Route::get('/itemCategoryType', [App\Http\Controllers\ItemCategoryTypeController::class, 'index'])->name('itemCategoryType.index');
     Route::get('/itemCategoryType/create', [App\Http\Controllers\ItemCategoryTypeController::class, 'create'])->name('itemCategoryType.create');
