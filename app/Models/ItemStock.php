@@ -21,4 +21,14 @@ class ItemStock extends Model
         'created_by',
         'updated_by'
     ];
+    
+    public function itemQty()
+    {
+        return $this->hasOne(ItemQty::class, 'id');
+    }
+
+    public function itemPrice()
+    {
+        return $this->hasOne(itemPrice::class, 'id');
+    }
 }

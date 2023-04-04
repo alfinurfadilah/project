@@ -29,12 +29,6 @@ class ItemController extends Controller
         //
         $breadcumb = "Barang";
 
-        // $items = Item::when(request('search'), function($query){
-        //     return $query->where('item_name','like','%'.request('search').'%');
-        // })
-        // ->orderBy('created_at','desc')
-        // ->paginate(10);
-
         $items = Item::when(request('search'), function($query){
             return $query->where('item_name','like','%'.request('search').'%');
         })
@@ -88,12 +82,7 @@ class ItemController extends Controller
                 'name' => $request->namaBarang,
                 'img_url' => 'uploads/images/'.$new_gambar,
                 'description' => $request->description,
-                'created_by' => Auth::id(),
-
-                // 'category_id' => $request->kategoriBarang,
-                // 'harga_jual' => str_replace("Rp ", "", str_replace(",", "", $request->hargaJual)),
-                // 'harga_modal' => str_replace("Rp ", "", str_replace(",", "", $request->hargaModal)),
-                // 'qty' => $request->qty,
+                'created_by' => Auth::id()
             ]);        
 
             Image::make($gambar->getRealPath())->resize(null, 200, function ($constraint) {
@@ -114,43 +103,48 @@ class ItemController extends Controller
         $listItemQtyId = [];
         $listItemPriceId = [];
 
-        if ($request->qtyStock) {
-            
-            for ($i=0; $i < count($request->qtyStock); $i++) { 
-                
-                $itemQty = ItemQty::create([
-                    'qty' => $request->qtyStock[$i],
-                    'qty_change' => $request->qtyStock[$i]
-                ]);
-
-                array_push($listItemQtyId, $itemQty->id);
-
-            }
-        }
-
-        if ($request->hargaModal && $request->hargaJual) {
-
-            for ($i=0; $i < count($request->hargaModal); $i++) { 
-                
-                $ItemPrice = ItemPrice::create([
-                    'current_price' => $request->hargaModal[$i],
-                    'price' => $request->hargaJual[$i]
-                ]);
-
-                array_push($listItemPriceId, $ItemPrice->id);
+        if ($request->batchId) {
+            if ($request->qtyStock) {
+                foreach ($request->qtyStock as $i => $value) {
+                    $itemQty = ItemQty::create([
+                        'qty' => $request->qtyStock[$i],
+                        'qty_change' => $request->qtyStock[$i]
+                    ]);
+                    
+                    $listItemQtyId[$i] = $itemQty->id;
+                }
             }
 
-        }
+            if ($request->hargaModal || $request->hargaJual) {
 
-        for ($i=0; $i < count($listItemQtyId); $i++) { 
-            
-            ItemStock::create([
-                'item_id' => $item->id,
-                'batch_stock' => $request->batchId[$i],
-                'item_qty_id' => $listItemQtyId[$i],
-                'item_price_id' => $listItemPriceId[$i],
-                'created_by' => Auth::id()
-            ]);
+                foreach ($request->hargaModal as $i => $value) {
+                    $ItemPrice = ItemPrice::create([
+                        'current_price' => $request->hargaModal[$i],
+                        'price' => $request->hargaJual[$i]
+                    ]);
+
+                    $listItemPriceId[$i] = $ItemPrice->id;
+                }
+    
+            }
+
+            foreach ($request->batchId as $i => $value) {
+                $stringTglProduksi = strtotime($request->tglProduksi[$i]);
+                $tglProduksi = date('Y-m-d', $stringTglProduksi);
+    
+                $stringTglKadaluarsa = strtotime($request->tglKadaluarsa[$i]);
+                $tglKadaluarsa = date('Y-m-d', $stringTglKadaluarsa);
+                
+                ItemStock::create([
+                    'item_id' => $item->id,
+                    'batch_stock' => $request->batchId[$i],
+                    'item_qty_id' => $listItemQtyId[$i],
+                    'item_price_id' => $listItemPriceId[$i],
+                    'production_date' => $tglProduksi,
+                    'expired_date' => $tglKadaluarsa,
+                    'created_by' => Auth::id()
+                ]);
+            }
             
         }
 

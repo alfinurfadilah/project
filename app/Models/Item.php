@@ -36,11 +36,8 @@ class Item extends Model
         return $this->belongsTo(Uom::class, 'uom_id');
     }
 
-    public function itemQty(){
-        return $this->hasOne(ItemQty::class, 'item_id');
-    }
-
-    public function itemPrice(){
-        return $this->hasOne(ItemPrice::class, 'item_id');
+    public function itemStock()
+    {
+        return $this->hasMany(ItemStock::class, 'item_id');
     }
 }
