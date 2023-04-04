@@ -150,7 +150,7 @@
                                 </div>
                             </div>
 
-                            <div data-kt-menu-trigger="click" data-kt-menu-placement="right-start" class="menu-item py-3">
+                            <div data-kt-menu-trigger="click" data-kt-menu-placement="right-start" class="menu-item py-3 {{ Route::is('item.index') ? 'here' : '' }}">
                                 <span class="menu-link" title="Manajemen Items" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
                                     <span class="menu-icon">
                                         <!--begin::Svg Icon | path: assets/media/icons/duotune/ecommerce/ecm009.svg-->

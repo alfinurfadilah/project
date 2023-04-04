@@ -23,4 +23,24 @@ class Item extends Model
         'created_by', 
         'updated_by'
     ];
+
+    public function itemCategories(){
+        return $this->belongsTo(ItemCategories::class, 'item_category_id');
+    }
+
+    public function itemType(){
+        return $this->belongsTo(ItemType::class, 'item_type_id');
+    }
+
+    public function uom(){
+        return $this->belongsTo(Uom::class, 'uom_id');
+    }
+
+    public function itemQty(){
+        return $this->hasOne(ItemQty::class, 'item_id');
+    }
+
+    public function itemPrice(){
+        return $this->hasOne(ItemPrice::class, 'item_id');
+    }
 }

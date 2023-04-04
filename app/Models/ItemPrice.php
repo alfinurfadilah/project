@@ -12,6 +12,10 @@ class ItemPrice extends Model
     protected $table = 'item_prices';
 
     protected $fillable = [
-        'item_id', 'buy_price', 'sell_price'
+        'current_price', 
+        'price', 
+        'discount', 
+        'created_by', 
+        'updated_by'
     ];
 }

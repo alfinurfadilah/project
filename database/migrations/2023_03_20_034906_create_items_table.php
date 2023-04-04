@@ -15,16 +15,16 @@ return new class extends Migration
     {
         Schema::create('items', function (Blueprint $table) {
             $table->id();
-            $table->integer('item_category_id');
-            $table->integer('item_type_id');
-            $table->integer('uom_id');
-            $table->string('code');
+            $table->integer('item_category_id')->nullable();
+            $table->integer('item_type_id')->nullable();
+            $table->integer('uom_id')->nullable();
+            $table->string('code')->nullable();
             $table->string('name');
-            $table->string('img_url');
-            $table->integer('discount');
-            $table->text('description');
-            $table->integer('created_by');
-            $table->integer('updated_by');
+            $table->string('img_url')->nullable();
+            $table->integer('discount')->nullable();
+            $table->text('description')->nullable();
+            $table->integer('created_by')->nullable();
+            $table->integer('updated_by')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

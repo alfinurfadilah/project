@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
+use App\Models\ItemStock;
 use App\Models\ItemQty;
 use App\Models\ItemPrice;
 use App\Models\ItemCategories;
@@ -27,6 +28,12 @@ class ItemController extends Controller
     {
         //
         $breadcumb = "Barang";
+
+        // $items = Item::when(request('search'), function($query){
+        //     return $query->where('item_name','like','%'.request('search').'%');
+        // })
+        // ->orderBy('created_at','desc')
+        // ->paginate(10);
 
         $items = Item::when(request('search'), function($query){
             return $query->where('item_name','like','%'.request('search').'%');
@@ -63,17 +70,15 @@ class ItemController extends Controller
     public function store(Request $request)
     {
         // dd($request->all());
+        // dd(count($request->qtyStock));
 
         $this->validate($request, [
-            'namaBarang' => 'required|min:2|max:200',
-            'kodeBarang' => 'required',
+            'namaBarang' => 'required|min:2|max:200'
         ]);
 
         if($request->has('image')){
-            // dd("keisni");
             $gambar = $request->image;
             $new_gambar = time().$gambar->getClientOriginalName();
-
 
             $item = Item::create([
                 'item_category_id' => $request->itemCategoryId,
@@ -95,7 +100,6 @@ class ItemController extends Controller
                 $constraint->aspectRatio();
             })->save(public_path('uploads/images/' . $new_gambar));
         } else {
-            dd("kesini 2");
             $item = Item::create([
                 'item_category_id' => $request->itemCategoryId,
                 'item_type_id' => $request->itemTypeId,
@@ -107,16 +111,48 @@ class ItemController extends Controller
             ]);
         }
 
-        ItemQty::create([
-            'item_id' => $item->id,
-            'qty' => $request->qty
-        ]);
+        $listItemQtyId = [];
+        $listItemPriceId = [];
 
-        ItemPrice::create([
-            'item_id' => $item->id,
-            'buy_price' => $request->hargaModal,
-            'sell_price' => $request->hargaJual
-        ]);
+        if ($request->qtyStock) {
+            
+            for ($i=0; $i < count($request->qtyStock); $i++) { 
+                
+                $itemQty = ItemQty::create([
+                    'qty' => $request->qtyStock[$i],
+                    'qty_change' => $request->qtyStock[$i]
+                ]);
+
+                array_push($listItemQtyId, $itemQty->id);
+
+            }
+        }
+
+        if ($request->hargaModal && $request->hargaJual) {
+
+            for ($i=0; $i < count($request->hargaModal); $i++) { 
+                
+                $ItemPrice = ItemPrice::create([
+                    'current_price' => $request->hargaModal[$i],
+                    'price' => $request->hargaJual[$i]
+                ]);
+
+                array_push($listItemPriceId, $ItemPrice->id);
+            }
+
+        }
+
+        for ($i=0; $i < count($listItemQtyId); $i++) { 
+            
+            ItemStock::create([
+                'item_id' => $item->id,
+                'batch_stock' => $request->batchId[$i],
+                'item_qty_id' => $listItemQtyId[$i],
+                'item_price_id' => $listItemPriceId[$i],
+                'created_by' => Auth::id()
+            ]);
+            
+        }
 
         $message = 'Data Berhasil di simpan';
 

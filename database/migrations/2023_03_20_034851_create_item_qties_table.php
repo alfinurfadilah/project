@@ -15,8 +15,10 @@ return new class extends Migration
     {
         Schema::create('item_qties', function (Blueprint $table) {
             $table->id();
-            $table->string('item_id');
             $table->integer('qty');
+            $table->integer('qty_change');
+            $table->integer('created_by')->nullable();
+            $table->integer('updated_by')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

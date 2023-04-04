@@ -66,6 +66,7 @@
                         <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
                             <th>Nama Barang</th>
                             <th>Kategori</th>
+                            <th>Jenis</th>
                             <th>Stok</th>
                             <th>Harga Jual</th>
                             <th>Harga Harga Modal</th>
@@ -129,18 +130,21 @@
                                     <!--end::Content-->
                                 </div>
                             </td>
-                            <td>kategori nnya apa</td>
+                            {{-- <td>{{ $item->itemCategories->name}}</td> --}}
+                            {{-- <td>{{ $item->itemType->name}}</td> --}}
                             <td>
-                                @php
-                                    if ($item->qty <= 10) {
-                                        echo '<label class="fw-bold text-danger">'. number_format($item->qty) .'<i class="fas fa-exclamation-circle ms-1 fs-7 text-danger" data-bs-toggle="tooltip" title="" data-bs-original-title="Stok hampir habis" aria-label="Phone number must be active"></i></label>';
-                                    } else {
-                                        echo '<label class="fw-bold text-primary">'. number_format($item->qty) .'<i class="fas fa-exclamation-circle ms-1 fs-7" data-bs-toggle="tooltip" title="" data-bs-original-title="Stok aman" aria-label="Phone number must be active"></i></label>';
+                                {{-- @php
+                                    if ($item->itemQty) {
+                                        if ($item->itemQty->qty <= 10) {
+                                            echo '<label class="fw-bold text-danger">'. number_format($item->itemQty->qty) .'<i class="fas fa-exclamation-circle ms-1 fs-7 text-danger" data-bs-toggle="tooltip" title="" data-bs-original-title="Stok hampir habis" aria-label="Phone number must be active"></i></label>';
+                                        } else {
+                                            echo '<label class="fw-bold text-primary">'. number_format($item->itemQty->qty) .'<i class="fas fa-exclamation-circle ms-1 fs-7" data-bs-toggle="tooltip" title="" data-bs-original-title="Stok aman" aria-label="Phone number must be active"></i></label>';
+                                        }
                                     }
-                                @endphp
+                                @endphp --}}
                             </td>
-                            <td class="fw-bolder">{{ number_format($item->harga_jual) }}</td>
-                            <td>{{ number_format($item->harga_modal) }}</td>
+                            {{-- <td class="fw-bolder">{{ number_format(@$item->itemPrice->sell_price) }}</td>
+                            <td>{{ number_format(@$item->itemPrice->buy_price) }}</td> --}}
                         </tr>
                         @endforeach
                     </tbody>

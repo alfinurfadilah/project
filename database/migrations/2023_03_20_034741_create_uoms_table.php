@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('uom_name');
             $table->string('symbol');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

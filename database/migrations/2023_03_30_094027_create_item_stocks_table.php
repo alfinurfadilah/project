@@ -13,11 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('item_prices', function (Blueprint $table) {
+        Schema::create('item_stocks', function (Blueprint $table) {
             $table->id();
-            $table->integer('current_price')->nullable();
-            $table->integer('price')->nullable();
-            $table->integer('discount')->nullable();
+            $table->integer('item_id');
+            $table->integer('batch_stock')->nullable();
+            $table->integer('item_qty_id');
+            $table->integer('item_price_id');
+            $table->string('code_batch')->nullable();
+            $table->date('expired_date')->nullable();
+            $table->date('production_date')->nullable();
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
             $table->softDeletes();
@@ -32,6 +36,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('item_prices');
+        Schema::dropIfExists('item_stocks');
     }
 };

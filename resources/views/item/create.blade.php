@@ -46,31 +46,12 @@
                             <!--end::Icon-->
                             <!--begin::Label-->
                             <div class="stepper-label">
-                                <h3 class="stepper-title">Kelola Harga</h3>
+                                <h3 class="stepper-title">Kelola Stock & Harga (Opsional)</h3>
                                 <div class="stepper-desc fw-bold">Tentukan detail harga produk anda</div>
                             </div>
                             <!--end::Label-->
                         </div>
                         <!--end::Step 2-->
-                        <!--begin::Step 3-->
-                        <div class="stepper-item" data-kt-stepper-element="nav">
-                            <!--begin::Line-->
-                            <div class="stepper-line w-40px"></div>
-                            <!--end::Line-->
-                            <!--begin::Icon-->
-                            <div class="stepper-icon w-40px h-40px">
-                                <i class="stepper-check fas fa-check"></i>
-                                <span class="stepper-number">3</span>
-                            </div>
-                            <!--end::Icon-->
-                            <!--begin::Label-->
-                            <div class="stepper-label">
-                                <h3 class="stepper-title">Kelola Stock</h3>
-                                <div class="stepper-desc fw-bold">Tentukan stock barang anda</div>
-                            </div>
-                            <!--end::Label-->
-                        </div>
-                        <!--end::Step 3-->
                     </div>
                     <!--end::Nav-->
                 </div>
@@ -116,7 +97,7 @@
                                     <div class="fv-row mb-10">
                                         <div class="col">
                                             <div class="form-group">
-                                                <label class="form-label required" for="kodeBarang">Kode Barang</label>
+                                                <label class="form-label" for="kodeBarang">Kode Barang</label>
                                                 <input type="text" class="form-control form-control-solid" name="kodeBarang" value="{{ old('kodeBarang') }}">
                                                 @include('layouts.error', ['name' => 'kodeBarang'])
                                             </div>
@@ -142,7 +123,7 @@
                                     <div class="fv-row mb-10">
                                         <div class="col">
                                             <div class="form-group">
-                                                <label class="form-label required" for="kategoriBarang">Jenis Satuan</label>
+                                                <label class="form-label" for="kategoriBarang">Jenis Satuan</label>
                                                 <select name="uomId" aria-label="Pilih Satuan" data-control="select2" data-placeholder="Pilih Satuan..." data-dropdown-parent="#kt_create_product_form" class="form-control form-select form-select-solid fw-bolder">
                                                     <option value="">Pilih Satuan...</option>
                                                     @foreach ($uom as $index=>$value)
@@ -159,7 +140,7 @@
                                     <div class="fv-row mb-10">
                                         <div class="col">
                                             <div class="form-group">
-                                                <label class="form-label required" for="kategoriBarang">Kategori Barang</label>
+                                                <label class="form-label" for="kategoriBarang">Kategori Barang</label>
                                                 <select name="itemCategoryId" aria-label="Pilih Kategori" data-control="select2" data-placeholder="Pilih Kategori..." data-dropdown-parent="#kt_create_product_form" class="form-control form-select form-select-solid fw-bolder">
                                                     <option value="">Pilih Kategori...</option>
                                                     @foreach ($itemCategories as $index=>$value)
@@ -179,7 +160,7 @@
                                     <div class="fv-row mb-10">
                                         <div class="col">
                                             <div class="form-group">
-                                                <label class="form-label required" for="jenisBarang">Jenis Barang</label>
+                                                <label class="form-label" for="jenisBarang">Jenis Barang</label>
                                                 <select name="itemTypeId" aria-label="Pilih Jenis Barang" data-control="select2" data-placeholder="Pilih Jenis Barang..." data-dropdown-parent="#kt_create_product_form" class="form-control form-select form-select-solid fw-bolder">
                                                     <option value="">Pilih Jenis Barang...</option>
                                                     @foreach ($itemType as $index=>$value)
@@ -226,7 +207,7 @@
                             <div class="pb-10 pb-lg-15">
                                 <!--begin::Title-->
                                 <h2 class="fw-bolder text-dark">
-                                    Kelola Harga
+                                    Kelola Stock & Harga (Opsional)
                                     <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="Masukan nilai harga barang yang akan anda simpan"></i>
                                 </h2>
                                 <!--end::Title-->
@@ -236,87 +217,95 @@
                                 <!--end::Notice-->
                             </div>
                             <!--end::Heading-->
+
                             <!--begin::Input group-->
+                            <div id="batchFormInput"></div>
 
-                            <div class="row">
-                                <div class="col">
-                                    <div class="fv-row mb-10">
-                                        <div class="col">
-                                            <div class="form-group">
-                                                <label class="form-label" for="hargaJual">Harga Modal</label>
-                                                <input class="form-control" type="text" name="hargaModal" value="{{ old('hargaModal') }}" data-type="currency" placeholder="Rp 1,000,000.00">
-                                                @include('layouts.error', ['name' => 'hargaModal'])
+                            <div class="row" id="templateBatchFormInput" style="display:none">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="fv-row mb-10">
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label class="form-label required" for="hargaJual">Batch ID</label>
+                                                    <input class="form-control" type="text" data-name="stock.batchId">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="fv-row">
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label class="form-label required" for="hargaJual">Jumlah Stok</label>
+                                                    <input class="form-control" type="text" data-name="stock.qtyStock">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col">
-                                    <div class="fv-row mb-10">
-                                        <div class="col">
-                                            <div class="form-group">
-                                                <label class="form-label" for="hargaJual">Harga Jual</label>
-                                                <input class="form-control" type="text" name="hargaJual" value="{{ old('hargaJual') }}" data-type="currency" placeholder="Rp 1,000,000.00">
-                                                @include('layouts.error', ['name' => 'hargaJual'])
+
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="fv-row mb-10">
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label class="form-label" for="hargaJual">Harga Modal</label>
+                                                    <input class="form-control" type="text" data-name="stock.hargaModal">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="fv-row mb-10">
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label class="form-label" for="hargaJual">Harga Jual</label>
+                                                    <input class="form-control" type="text" data-name="stock.hargaJual">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                
+                                <div class="row mb-10">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <button type="button" class="form-control btn btn-sm btn-danger me-3 btnRemove">
+                                                <!--begin::Svg Icon | path: assets/media/icons/duotune/arrows/arr015.svg-->
+                                                <span class="svg-icon svg-icon-muted svg-icon-2x">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                        <path d="M22 12C22 17.5 17.5 22 12 22C6.5 22 2 17.5 2 12C2 6.5 6.5 2 12 2C17.5 2 22 6.5 22 12ZM18 12C18 11.4 17.6 11 17 11H7C6.4 11 6 11.4 6 12C6 12.6 6.4 13 7 13H17C17.6 13 18 12.6 18 12Z" fill="black"/>
+                                                    </svg>
+                                                </span>
+                                                <!--end::Svg Icon-->
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="separator my-10"></div>
                             </div>
-
+                            
+                            <div class="row">
+                                <button type="button" class="btn btn-lg btn-success me-3" id="btnAddBatch">
+                                    <span class="indicator-label">
+                                        <!--begin::Svg Icon | path: assets/media/icons/duotune/arrows/arr087.svg-->
+                                        <span class="svg-icon svg-icon-muted svg-icon-2x">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <rect opacity="0.5" x="11" y="18" width="12" height="2" rx="1" transform="rotate(-90 11 18)" fill="black"/>
+                                                <rect x="6" y="11" width="12" height="2" rx="1" fill="black"/>
+                                            </svg>
+                                        </span>
+                                        <!--end::Svg Icon-->
+                                        Add Batch
+                                    </span>
+                                </button>
+                            </div>
                             <!--end::Input group-->
                         </div>
                         <!--end::Wrapper-->
                     </div>
                     <!--end::Step 2-->
-
-                    <!--begin::Step 3-->
-                    <div data-kt-stepper-element="content">
-                        <!--begin::Wrapper-->
-                        <div class="w-100">
-                            <!--begin::Heading-->
-                            <div class="pb-10 pb-lg-15">
-                                <!--begin::Title-->
-                                <h2 class="fw-bolder text-dark">
-                                    Kelola Stock
-                                    <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="Masukan stok barang yang akan anda simpan"></i>
-                                </h2>
-                                <!--end::Title-->
-                                <!--begin::Notice-->
-                                <div class="text-muted fw-bold fs-6">Apabila anda membutuhkan informasi lebih, mohon cek
-                                <a href="#" class="link-primary fw-bolder">Pusat Bantuan</a>.</div>
-                                <!--end::Notice-->
-                            </div>
-                            <!--end::Heading-->
-                            <!--begin::Input group-->
-
-                            <div class="row">
-                                <div class="row mb-10">
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <div class="form-check form-switch form-check-custom form-check-solid">
-                                                <input class="form-check-input" name="aturStock" type="checkbox" value="" id="flexSwitchAturStock"/>
-                                                <label class="form-check-label" for="flexSwitchAturStock">Atur Stock</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-    
-                                <div class="fv-row mb-10" style="display:none;" id="inputJumlahStock">
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <label class="form-label" for="jumlahStock">Stok Saat Ini</label>
-                                            <input type="number" class="form-control form-control-solid" name="qty" value="{{ old('qty') }}" min="0">
-                                            @include('layouts.error', ['name' => 'qty'])
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!--end::Input group-->
-                        </div>
-                        <!--end::Wrapper-->
-                    </div>
-                    <!--end::Step 3-->
 
                     <!--begin::Actions-->
                     <div class="d-flex flex-stack pt-10">
@@ -389,13 +378,6 @@
         form,
         {
             fields: {
-                'kodeBarang': {
-                    validators: {
-                        notEmpty: {
-                            message: 'Kode barang harus di isi'
-                        }
-                    }
-                },
                 'namaBarang': {
                     validators: {
                         notEmpty: {
@@ -403,27 +385,6 @@
                         }
                     }
                 },
-                'uomId': {
-                    validators: {
-                        notEmpty: {
-                            message: 'Pilih salah satu satuan barang'
-                        }
-                    }
-                },
-                'itemCategoryId': {
-                    validators: {
-                        notEmpty: {
-                            message: 'Pilih salah satu kategori barang'
-                        }
-                    }
-                },
-                'itemTypeId': {
-                    validators: {
-                        notEmpty: {
-                            message: 'Pilih salah satu jenis barang'
-                        }
-                    }
-                }
             },
 
             plugins: {
@@ -436,38 +397,6 @@
             }
         }
     ));
-
-    // Validator untuk di step 2
-    // validator.push(FormValidation.formValidation(
-    //     form,
-    //     {
-    //         fields: {
-    //             'hargaModal': {
-    //                 validators: {
-    //                     notEmpty: {
-    //                         message: 'Harga modal harus di isi'
-    //                     }
-    //                 }
-    //             },
-    //             'hargaJual': {
-    //                 validators: {
-    //                     notEmpty: {
-    //                         message: 'Harga jual harus di isi'
-    //                     }
-    //                 }
-    //             }
-    //         },
-
-    //         plugins: {
-    //             trigger: new FormValidation.plugins.Trigger(),
-    //             bootstrap: new FormValidation.plugins.Bootstrap5({
-    //                 rowSelector: '.fv-row',
-    //                 eleInvalidClass: 'is-invalid',
-    //                 eleValidClass: ''
-    //             })
-    //         }
-    //     }
-    // ));
 
     // Stepper lement
     var element = document.querySelector("#kt_create_product_stepper");
@@ -502,7 +431,7 @@
     var formSubmitButton = submitButton;
 
     stepper.on('kt.stepper.changed', function(stepper) {
-        if (stepper.getCurrentStepIndex() === 3) {
+        if (stepper.getCurrentStepIndex() === 2) {
             formSubmitButton.classList.remove('d-none');
             formSubmitButton.classList.add('d-inline-block');
         } else {
@@ -537,38 +466,117 @@
 
 <!--begin::Other form event-->
 <script>
-    // handle switch on atur stock section
-    $('#flexSwitchAturStock').change(function() {
+    document.addEventListener('DOMContentLoaded', function (e) {
+        const batchIdValidators = {
+            validators: {
+                notEmpty: {
+                    message: 'Batch ID tidak boleh kosong',
+                },
+            },
+        };
+        const jumlahStockValidators = {
+            validators: {
+                notEmpty: {
+                    message: 'Jumlah Stok tidak boleh kosong',
+                },
+                numeric: {
+                    message: 'Jumlah stok harus berupa angka',
+                },
+            },
+        };
+        const hargaModalValidators = {
+            validators: {
+                // notEmpty: {
+                //     message: 'Harga modal tidak boleh kosong',
+                // }, 
+                numeric: {
+                    message: 'Harga modal harus berupa angka',
+                },
+            },
+        };
+        const hargaJualValidators = {
+            validators: {
+                // notEmpty: {
+                //     message: 'Harga jual tidak boleh kosong',
+                // },
+                numeric: {
+                    message: 'Harga jual harus berupa angka',
+                },
+            },
+        };
 
-        if(!this.checked) {
-            Swal.fire({
-                title: 'Ubah status kelola stok?',
-                html: 'Catatan stok akan terhapus setelah ubah status',
-                icon: "question",
-                buttonsStyling: false,
-                showCancelButton: true,
-                confirmButtonText: "Ubah",
-                cancelButtonText: 'Batal',
-                customClass: {
-                    confirmButton: "btn btn-primary",
-                    cancelButton: 'btn btn-danger'
-                }
-            }).then(function (isConfirm) {
-            
-                // IF User Choose Cancel
-                if (!isConfirm.isConfirmed) {
-                    $('#flexSwitchAturStock').prop('checked', true);
-                    $('#inputJumlahStock').show();
-                    return
-                };
+        const demoForm = form;
+        validator.push(FormValidation.formValidation(demoForm, {
+            fields: {
+                'batchId[0]': batchIdValidators,
+                'qtyStock[0]': jumlahStockValidators,
+                'hargaModal[0]': hargaModalValidators,
+                'hargaJual[0]': hargaJualValidators,
+            },
+            plugins: {
+                trigger: new FormValidation.plugins.Trigger(),
+                bootstrap: new FormValidation.plugins.Bootstrap5({
+                    rowSelector: '.fv-row',
+                    eleInvalidClass: 'is-invalid',
+                    eleValidClass: ''
+                })
+            },
+        }));
 
-                $('#inputJumlahStock').hide();
+        const removeRow = function (rowIndex) {
+            const row = demoForm.querySelector('[data-row-index="' + rowIndex + '"]');
 
+            // Remove field
+            validator[1].removeField('batchId[' + rowIndex + ']')
+                .removeField('qtyStock[' + rowIndex + ']')
+                .removeField('hargaModal[' + rowIndex + ']')
+                .removeField('hargaJual[' + rowIndex + ']');
+
+            // Remove row
+            row.parentNode.removeChild(row);
+        };
+
+        const template = document.getElementById('templateBatchFormInput');
+        let rowIndex = 0;
+
+        document.getElementById('btnAddBatch').addEventListener('click', function () {
+
+            const clone = template.cloneNode(true);
+            clone.removeAttribute('id');
+
+            // Show the row
+            clone.style.display = 'block';
+
+            clone.setAttribute('data-row-index', rowIndex);
+
+            // Insert before the template
+            template.before(clone);
+
+            clone.querySelector('[data-name="stock.batchId"]').setAttribute('name', 'batchId[' + rowIndex + ']');
+            clone.querySelector('[data-name="stock.qtyStock"]').setAttribute('name', 'qtyStock[' + rowIndex + ']');
+            clone.querySelector('[data-name="stock.hargaModal"]').setAttribute('name', 'hargaModal[' + rowIndex + ']');
+            clone.querySelector('[data-name="stock.hargaJual"]').setAttribute('name', 'hargaJual[' + rowIndex + ']');
+
+            // Add new fields
+            // Note that we also pass the validator rules for new field as the third parameter
+            validator[1].addField('batchId[' + rowIndex + ']', batchIdValidators)
+                .addField('qtyStock[' + rowIndex + ']', jumlahStockValidators)
+                .addField('hargaModal[' + rowIndex + ']', hargaModalValidators)
+                .addField('.hargaJual[' + rowIndex + ']', hargaJualValidators);
+
+            // Handle the click event of removeButton
+            const removeBtn = clone.querySelector('.btnRemove');
+            removeBtn.setAttribute('data-row-index', rowIndex);
+            removeBtn.addEventListener('click', function (e) {
+                // Get the row index
+                const index = $(this).data("row-index");
+                removeRow(index);
             });
-        } else {
-            $('#inputJumlahStock').show();
-        }
+
+            rowIndex++;
+        });
     });
 </script>
+
 <!--end::Other form event-->
 @endsection
