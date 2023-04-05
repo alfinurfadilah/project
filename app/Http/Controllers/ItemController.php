@@ -8,6 +8,7 @@ use App\Models\ItemQty;
 use App\Models\ItemPrice;
 use App\Models\ItemCategories;
 use App\Models\ItemType;
+use App\Models\ItemHistory;
 use App\Models\Uom;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -135,13 +136,21 @@ class ItemController extends Controller
                 $stringTglKadaluarsa = strtotime($request->tglKadaluarsa[$i]);
                 $tglKadaluarsa = date('Y-m-d', $stringTglKadaluarsa);
                 
-                ItemStock::create([
+                $itemStock = ItemStock::create([
                     'item_id' => $item->id,
                     'batch_stock' => $request->batchId[$i],
                     'item_qty_id' => $listItemQtyId[$i],
                     'item_price_id' => $listItemPriceId[$i],
                     'production_date' => $tglProduksi,
                     'expired_date' => $tglKadaluarsa,
+                    'created_by' => Auth::id()
+                ]);
+
+                ItemHistory::create([
+                    'item_stock_id' => $itemStock->id,
+                    'qty' => $request->qtyStock[$i],
+                    'qty_change' => 0,
+                    'description' => "Tambah item baru",
                     'created_by' => Auth::id()
                 ]);
             }

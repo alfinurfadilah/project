@@ -21,6 +21,14 @@ class ItemStock extends Model
         'created_by',
         'updated_by'
     ];
+
+    public function item(){
+        return $this->belongsTo(Item::class, 'item_id');
+    }
+
+    public function itemHistory(){
+        return $this->hasMany(ItemHistory::class, 'item_stock_id');
+    }
     
     public function itemQty()
     {

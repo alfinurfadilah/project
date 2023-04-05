@@ -150,7 +150,7 @@
                                 </div>
                             </div>
 
-                            <div data-kt-menu-trigger="click" data-kt-menu-placement="right-start" class="menu-item py-3 {{ Route::is('item.index') ? 'here' : '' }}">
+                            <div data-kt-menu-trigger="click" data-kt-menu-placement="right-start" class="menu-item py-3 {{ Route::is('item.index') ? 'here' : '' }} {{ Route::is('itemHistory.index') ? 'here' : '' }}">
                                 <span class="menu-link" title="Manajemen Items" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
                                     <span class="menu-icon">
                                         <!--begin::Svg Icon | path: assets/media/icons/duotune/ecommerce/ecm009.svg-->
@@ -184,7 +184,7 @@
                                         </a>
                                     </div>
                                     <div class="menu-item">
-                                        <a class="menu-link {{ Route::is('itemType.index') ? 'active' : '' }}" href="{{ route('itemType.index') }}">
+                                        <a class="menu-link {{ Route::is('itemHistory.index') ? 'active' : '' }}" href="{{ route('itemHistory.index') }}">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>

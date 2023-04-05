@@ -13,15 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('item_stocks', function (Blueprint $table) {
+        Schema::create('item_histories', function (Blueprint $table) {
             $table->id();
-            $table->integer('item_id');
-            $table->string('batch_stock')->nullable();
-            $table->integer('item_qty_id');
-            $table->integer('item_price_id');
-            $table->string('code_batch')->nullable();
-            $table->date('expired_date')->nullable();
-            $table->date('production_date')->nullable();
+            $table->integer('item_stock_id');
+            $table->integer('qty')->nullable();
+            $table->integer('qty_change')->nullable();
+            $table->text('description')->nullable();
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
             $table->softDeletes();
@@ -36,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('item_stocks');
+        Schema::dropIfExists('item_histories');
     }
 };
