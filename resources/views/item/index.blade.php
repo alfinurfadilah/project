@@ -100,37 +100,26 @@
                             <td class="align-top">{{ $item->uom->uom_name}}</td>
                             <td class="align-top">
                                 @php
-                                    // dd($item->itemStock);
                                     foreach (@$item->itemStock as $key => $value) {
                                         if ($value->itemQty->qty <= 10) {
-                                            echo '<div class="me-3"><div class="d-flex align-items-center"><div class="text-gray-800 fw-bolder">Batch ID : '. $value->batch_stock .'</div></div><div class="text-danger">Stok : '. number_format($value->itemQty->qty) .'<i class="fas fa-exclamation-circle ms-1 fs-7 text-danger" data-bs-toggle="tooltip" title="" data-bs-original-title="Stok hampir habis" aria-label="Phone number must be active"></i></div></div>';
+                                            echo '<div class="me-3"><div class="d-flex align-items-center"><div class="text-gray-800 fw-bolder">Batch ID : '. $value->batch_stock .'</div></div><div class="text-danger">Stok : '. number_format($value->itemQty->id) .'<i class="fas fa-exclamation-circle ms-1 fs-7 text-danger" data-bs-toggle="tooltip" title="" data-bs-original-title="Stok hampir habis" aria-label="Phone number must be active"></i></div></div>';
                                         } else {
-                                            echo '<div class="me-3"><div class="d-flex align-items-center"><div class="text-gray-800 fw-bolder">Batch ID : '. $value->batch_stock .'</div></div><div class="text-primary">Stok : '. number_format($value->itemQty->qty) .'<i class="fas fa-exclamation-circle ms-1 fs-7" data-bs-toggle="tooltip" title="" data-bs-original-title="Stok aman" aria-label="Phone number must be active"></i></div></div>';
+                                            echo '<div class="me-3"><div class="d-flex align-items-center"><div class="text-gray-800 fw-bolder">Batch ID : '. $value->batch_stock .'</div></div><div class="text-primary">Stok : '. number_format($value->itemQty->id) .'<i class="fas fa-exclamation-circle ms-1 fs-7" data-bs-toggle="tooltip" title="" data-bs-original-title="Stok aman" aria-label="Phone number must be active"></i></div></div>';
                                         }
                                     }
                                 @endphp
                             </td>
                             <td class="align-top">
                                 @php
-                                    // dd($item->itemStock);
                                     foreach (@$item->itemStock as $key => $value) {
-                                        if ($value->itemQty->qty <= 10) {
-                                            echo '<div class="me-3"><div class="d-flex align-items-center"><div class="text-gray-800 fw-bolder">Batch ID : '. $value->batch_stock .'</div></div><div class="text-bold">Harga : '. number_format($value->itemPrice->current_price) .'</div></div>';
-                                        } else {
-                                            echo '<div class="me-3"><div class="d-flex align-items-center"><div class="text-gray-800 fw-bolder">Batch ID : '. $value->batch_stock .'</div></div><div class="text-bold">Harga : '. number_format($value->itemPrice->current_price) .'</div></div>';
-                                        }
+                                        echo '<div class="me-3"><div class="d-flex align-items-center"><div class="text-gray-800 fw-bolder">Batch ID : '. $value->batch_stock .'</div></div><div class="text-bold">Harga : '. number_format($value->itemPrice->id) .'</div></div>';
                                     }
                                 @endphp
                             </td>
                             <td class="align-top">
                                 @php
-                                    // dd($item->itemStock);
                                     foreach (@$item->itemStock as $key => $value) {
-                                        if ($value->itemQty->qty <= 10) {
-                                            echo '<div class="me-3"><div class="d-flex align-items-center"><div class="text-gray-800 fw-bolder">Batch ID : '. $value->batch_stock .'</div></div><div class="text-bold">Harga : '. number_format($value->itemPrice->price) .'</div></div>';
-                                        } else {
-                                            echo '<div class="me-3"><div class="d-flex align-items-center"><div class="text-gray-800 fw-bolder">Batch ID : '. $value->batch_stock .'</div></div><div class="text-bold">Harga : '. number_format($value->itemPrice->price) .'</div></div>';
-                                        }
+                                        echo '<div class="me-3"><div class="d-flex align-items-center"><div class="text-gray-800 fw-bolder">Batch ID : '. $value->batch_stock .'</div></div><div class="text-bold">Harga : '. number_format($value->itemPrice->id) .'</div></div>';
                                     }
                                 @endphp
                             </td>

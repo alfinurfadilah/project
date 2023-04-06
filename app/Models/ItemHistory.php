@@ -13,7 +13,9 @@ class ItemHistory extends Model
 
     protected $fillable = [
         'item_stock_id',
+        'transaction_type_id',
         'qty',
+        'qty_current',
         'qty_change',
         'description',
         'created_by', 
@@ -22,5 +24,9 @@ class ItemHistory extends Model
 
     public function itemStocks(){
         return $this->belongsTo(ItemStock::class, 'item_stock_id');
+    }
+
+    public function transactionType(){
+        return $this->belongsTo(TransactionType::class, 'transaction_type_id');
     }
 }

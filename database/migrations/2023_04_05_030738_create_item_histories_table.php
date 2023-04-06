@@ -16,8 +16,10 @@ return new class extends Migration
         Schema::create('item_histories', function (Blueprint $table) {
             $table->id();
             $table->integer('item_stock_id');
+            $table->integer('transaction_type_id');
             $table->integer('qty')->nullable();
             $table->integer('qty_change')->nullable();
+            $table->integer('qty_current')->nullable();
             $table->text('description')->nullable();
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();

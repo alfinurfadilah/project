@@ -200,6 +200,8 @@
                         <th>Transaksi ID</th>
                         <th>Batch ID</th>
                         <th>Tipe Transaksi</th>
+                        <th>Deskripsi</th>
+                        <th>Stok Total</th>
                         <th>Stok Sekarang</th>
                         <th>Perubahan Stok</th>
                     </tr>
@@ -211,8 +213,10 @@
                             <td>{{ $itemStock->created_at }}</td>
                             <td>TRXID</td>
                             <td>{{ $itemStock->batch_stock }}</td>
+                            <td>{{ $itemHistory->transactionType->name }}</td>
                             <td>{{ $itemHistory->description }}</td>
                             <td>{{ $itemHistory->qty }}</td>
+                            <td>{{ $itemHistory->qty_current }}</td>
                             <td>{{ $itemHistory->qty_change }}</td>
                         </tr>
                         @endforeach

@@ -148,8 +148,10 @@ class ItemController extends Controller
 
                 ItemHistory::create([
                     'item_stock_id' => $itemStock->id,
+                    'transaction_type_id' => 1,
                     'qty' => $request->qtyStock[$i],
-                    'qty_change' => 0,
+                    'qty_current' => 0,
+                    'qty_change' => $request->qtyStock[$i],
                     'description' => "Tambah item baru",
                     'created_by' => Auth::id()
                 ]);

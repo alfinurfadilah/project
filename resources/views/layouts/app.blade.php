@@ -140,11 +140,11 @@
                                         </a>
                                     </div>
                                     <div class="menu-item">
-                                        <a class="menu-link" href="#">
+                                        <a class="menu-link {{ Route::is('supplier.index') ? 'active' : '' }}" href="{{route('supplier.index')}}">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
-                                            <span class="menu-title">Supplyer</span>
+                                            <span class="menu-title">Supplier</span>
                                         </a>
                                     </div>
                                 </div>
@@ -195,7 +195,7 @@
                             </div>
 
                             <div data-kt-menu-trigger="click" data-kt-menu-placement="right-start" class="menu-item py-3">
-                                <span class="menu-link" title="Manajemen Items" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
+                                <span class="menu-link" title="Manajemen Transaksi" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
                                     <span class="menu-icon">
                                         <!--begin::Svg Icon | path: assets/media/icons/duotune/ecommerce/ecm004.svg-->
                                         <span class="svg-icon svg-icon-muted svg-icon-2hx">

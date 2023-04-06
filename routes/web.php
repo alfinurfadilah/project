@@ -78,6 +78,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/customer/update', [App\Http\Controllers\CustomerController::class, 'update'])->name('customer.update');
     Route::delete('/customer/delete/{id}', [App\Http\Controllers\CustomerController::class, 'destroy'])->name('customer.delete');
 
+    Route::get('/supplier', [App\Http\Controllers\SupplierController::class, 'index'])->name('supplier.index');
+    Route::get('/supplier/create', [App\Http\Controllers\SupplierController::class, 'create'])->name('supplier.create');
+    Route::post('/supplier/store', [App\Http\Controllers\SupplierController::class, 'store'])->name('supplier.store');
+    Route::get('/supplier/edit/{id}', [App\Http\Controllers\SupplierController::class, 'edit'])->name('supplier.edit');
+    Route::post('/supplier/update', [App\Http\Controllers\SupplierController::class, 'update'])->name('supplier.update');
+    Route::delete('/supplier/delete/{id}', [App\Http\Controllers\SupplierController::class, 'destroy'])->name('supplier.delete');
+
     Route::get('/item_price', [App\Http\Controllers\UomController::class, 'index'])->name('item_price.index');
     Route::get('/item_price/create', [App\Http\Controllers\UomController::class, 'create'])->name('item_price.create');
 
