@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Auth;
 use Intervention\Image\Facades\Image;
 
+use File;
+
 class ItemController extends Controller
 {
     /**
@@ -30,12 +32,12 @@ class ItemController extends Controller
         //
         $breadcumb = "Barang";
 
-        $items = Item::when(request('search'), function($query){
-            return $query->where('item_name','like','%'.request('search').'%');
+        $items = Item::when(request('search'), function ($query) {
+            return $query->where('item_name', 'like', '%' . request('search') . '%');
         })
-        ->orderBy('created_at','desc')
-        ->paginate(10);
-        
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
         return view('item.index', compact('breadcumb', 'items'));
     }
 
@@ -48,7 +50,7 @@ class ItemController extends Controller
     {
         //
         $breadcumb = "Form Tambah Barang";
-        
+
         $itemCategories = ItemCategories::get();
         $itemType = ItemType::get();
         $uom = Uom::get();
@@ -71,9 +73,9 @@ class ItemController extends Controller
             'namaBarang' => 'required|min:2|max:200'
         ]);
 
-        if($request->has('image')){
+        if ($request->has('image')) {
             $gambar = $request->image;
-            $new_gambar = time().$gambar->getClientOriginalName();
+            $new_gambar = time() . $gambar->getClientOriginalName();
 
             $item = Item::create([
                 'item_category_id' => $request->itemCategoryId,
@@ -81,10 +83,10 @@ class ItemController extends Controller
                 'uom_id' => $request->uomId,
                 'code' => $request->kodeBarang,
                 'name' => $request->namaBarang,
-                'img_url' => 'uploads/images/'.$new_gambar,
+                'img_url' => 'uploads/images/' . $new_gambar,
                 'description' => $request->description,
                 'created_by' => Auth::id()
-            ]);        
+            ]);
 
             Image::make($gambar->getRealPath())->resize(null, 200, function ($constraint) {
                 $constraint->aspectRatio();
@@ -111,7 +113,7 @@ class ItemController extends Controller
                         'qty' => $request->qtyStock[$i],
                         'qty_change' => $request->qtyStock[$i]
                     ]);
-                    
+
                     $listItemQtyId[$i] = $itemQty->id;
                 }
             }
@@ -126,16 +128,15 @@ class ItemController extends Controller
 
                     $listItemPriceId[$i] = $ItemPrice->id;
                 }
-    
             }
 
             foreach ($request->batchId as $i => $value) {
                 $stringTglProduksi = strtotime($request->tglProduksi[$i]);
                 $tglProduksi = date('Y-m-d', $stringTglProduksi);
-    
+
                 $stringTglKadaluarsa = strtotime($request->tglKadaluarsa[$i]);
                 $tglKadaluarsa = date('Y-m-d', $stringTglKadaluarsa);
-                
+
                 $itemStock = ItemStock::create([
                     'item_id' => $item->id,
                     'batch_stock' => $request->batchId[$i],
@@ -156,13 +157,12 @@ class ItemController extends Controller
                     'created_by' => Auth::id()
                 ]);
             }
-            
         }
 
         $message = 'Data Berhasil di simpan';
 
         DB::commit();
-        return redirect()->route('item.index')->with('success', $message);  
+        return redirect()->route('item.index')->with('success', $message);
     }
 
     /**
@@ -171,20 +171,30 @@ class ItemController extends Controller
      * @param  \App\Models\Item  $item
      * @return \Illuminate\Http\Response
      */
-    public function show(Item $item)
+    public function show($id, Item $item)
     {
         //
+        $breadcumb = "Detail Barang";
+
+        $item = Item::where('id', '=', $id)->get()[0];
+
+        return view('item.show', compact('breadcumb', 'item'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Display the specified resource.
      *
      * @param  \App\Models\Item  $item
      * @return \Illuminate\Http\Response
      */
-    public function edit(Item $item)
+    public function showAturStock($id, Item $item)
     {
         //
+        $breadcumb = "Detail Barang";
+
+        $item = Item::where('id', '=', $id)->get()[0];
+
+        return view('item.showAturStock', compact('breadcumb', 'item'));
     }
 
     /**
@@ -194,9 +204,139 @@ class ItemController extends Controller
      * @param  \App\Models\Item  $item
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Item $item)
+    public function updateStock(Request $request, ItemStock $itemStock, ItemQty $itemQty, ItemPrice $itemPrice)
     {
-        //
+        // dd($request->all());
+
+        $this->validate($request, [
+            'jumlahStock' => 'required'
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+
+            $data = [
+                // 'qty' => (($itemQty->find($request->qtyId)->qty) + ($request->jumlahStock)),
+                'qty' => $request->jumlahStock,
+                'qty_change' => $request->jumlahStock
+            ];
+
+            $itemQty->find($request->qtyId)->update($data);
+
+            $data = [
+                'current_price' => $request->hargaModal,
+                'price' => $request->hargaJual
+            ];
+
+            $itemPrice->find($request->priceId)->update($data);
+
+            $stringTglProduksi = strtotime($request->tglProduksi);
+            $tglProduksi = date('Y-m-d', $stringTglProduksi);
+
+            $stringTglKadaluarsa = strtotime($request->tglKadaluarsa);
+            $tglKadaluarsa = date('Y-m-d', $stringTglKadaluarsa);
+            $data = [
+                'expired_date' => $tglKadaluarsa,
+                'production_date' => $tglProduksi
+            ];
+
+            $itemStock->find($request->stockId)->update($data);
+
+            DB::commit();
+            return redirect()->back()->with('success', 'Data Berhasil Disimpan');
+        } catch (\Exeception $e) {
+
+            DB::rollback();
+            return redirect()->back()->with('error', 'Data gagal disimpan');
+        }
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Models\Item  $item
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id, Item $item)
+    {
+        // dd($id);
+        $breadcumb = "Edit Barang";
+
+        $item = $item->find($id);
+        $itemCategories = ItemCategories::get();
+        $itemType = ItemType::get();
+        $uom = Uom::get();
+
+        return view('item.edit', compact('breadcumb', 'item', 'itemCategories', 'itemType', 'uom'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Item  $item
+     * @return \Illuminate\Http\Response
+     */
+    public function update($id, Request $request, Item $item)
+    {
+        // dd($request->all());
+
+        $this->validate($request, [
+            'namaBarang' => 'required'
+        ]);
+
+        $item = $item->find($id);
+
+        DB::beginTransaction();
+
+        try {
+
+            if ($request->image) {
+                $gambar = $request->image;
+                $new_gambar = time() . $gambar->getClientOriginalName();
+                Image::make($gambar->getRealPath())->resize(null, 200, function ($constraint) {
+                    $constraint->aspectRatio();
+                })->save(public_path('uploads/images/' . $new_gambar));
+
+                File::delete(public_path($item->image));
+
+                $product = [
+                    'item_category_id' => $request->itemCategoryId,
+                    'item_type_id' => $request->itemTypeId,
+                    'uom_id' => $request->uomId,
+                    'code' => $request->kodeBarang,
+                    'name' => $request->namaBarang,
+                    'img_url' => 'uploads/images/' . $new_gambar,
+                    'description' => $request->description,
+                    'created_by' => Auth::id(),
+                ];
+            } else {
+                $product = [
+                    'item_category_id' => $request->itemCategoryId,
+                    'item_type_id' => $request->itemTypeId,
+                    'uom_id' => $request->uomId,
+                    'code' => $request->kodeBarang,
+                    'name' => $request->namaBarang,
+                    'description' => $request->description,
+                    'created_by' => Auth::id(),
+                ];
+            }
+
+            $item->update($product);
+
+            $message = 'Data Berhasil di update';
+
+            DB::commit();
+
+            return redirect()->route('item.index')->with('success', $message);
+        } catch (\Exeception $e) {
+
+            DB::rollback();
+            return redirect()->back()->with('error', 'Data gagal disimpan');
+        }
+
+        return redirect()->back()->with('error', 'Data gagal disimpan');
     }
 
     /**
@@ -205,8 +345,18 @@ class ItemController extends Controller
      * @param  \App\Models\Item  $item
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Item $item)
+    public function destroy($id, Item $item)
     {
-        //
+        DB::beginTransaction();
+
+        try {
+            $item->find($id)->delete();
+
+            DB::commit();
+            return redirect()->route('item.index')->with('success', 'Barang berhasil dihapus');
+        } catch (\Exeception $e) {
+            DB::rollback();
+            return redirect()->route('item.index')->with('error', $e);
+        }
     }
 }

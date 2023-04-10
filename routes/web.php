@@ -23,15 +23,18 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::group(['middleware' => ['auth']], function () { 
+Route::group(['middleware' => ['auth']], function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
     Route::get('/item', [App\Http\Controllers\ItemController::class, 'index'])->name('item.index');
     Route::get('/item/create', [App\Http\Controllers\ItemController::class, 'create'])->name('item.create');
     Route::post('/item/store', [App\Http\Controllers\ItemController::class, 'store'])->name('item.store');
     Route::get('/item/edit/{id}', [App\Http\Controllers\ItemController::class, 'edit'])->name('item.edit');
-    Route::post('/item/update', [App\Http\Controllers\ItemController::class, 'update'])->name('item.update');
-    Route::post('/item/delete/{id}', [App\Http\Controllers\ItemController::class, 'delete'])->name('item.delete');
+    Route::post('/item/update/{id}', [App\Http\Controllers\ItemController::class, 'update'])->name('item.update');
+    Route::delete('/item/delete/{id}', [App\Http\Controllers\ItemController::class, 'destroy'])->name('item.delete');
+    Route::get('/item/show/{id}', [App\Http\Controllers\ItemController::class, 'show'])->name('item.show');
+    Route::get('/item/showAturStock/{id}', [App\Http\Controllers\ItemController::class, 'showAturStock'])->name('item.showAturStock');
+    Route::post('/item/updateStock', [App\Http\Controllers\ItemController::class, 'updateStock'])->name('item.updateStock');
 
     Route::get('/itemHistory', [App\Http\Controllers\ItemHistoryController::class, 'index'])->name('itemHistory.index');
     Route::get('/itemHistory/show/{id}', [App\Http\Controllers\ItemHistoryController::class, 'show'])->name('itemHistory.show');
@@ -42,7 +45,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/itemCategoryType/edit/{id}', [App\Http\Controllers\ItemCategoryTypeController::class, 'edit'])->name('itemCategoryType.edit');
     Route::post('/itemCategoryType/update', [App\Http\Controllers\ItemCategoryTypeController::class, 'update'])->name('itemCategoryType.update');
     Route::delete('/itemCategoryType/delete/{id}', [App\Http\Controllers\ItemCategoryTypeController::class, 'destroy'])->name('itemCategoryType.delete');
-    
+
     Route::get('/itemCategory', [App\Http\Controllers\ItemCategoriesController::class, 'index'])->name('itemCategory.index');
     Route::get('/itemCategory/create', [App\Http\Controllers\ItemCategoriesController::class, 'create'])->name('itemCategory.create');
     Route::post('/itemCategory/store', [App\Http\Controllers\ItemCategoriesController::class, 'store'])->name('itemCategory.store');
@@ -85,9 +88,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/supplier/update', [App\Http\Controllers\SupplierController::class, 'update'])->name('supplier.update');
     Route::delete('/supplier/delete/{id}', [App\Http\Controllers\SupplierController::class, 'destroy'])->name('supplier.delete');
 
-    Route::get('/item_price', [App\Http\Controllers\UomController::class, 'index'])->name('item_price.index');
-    Route::get('/item_price/create', [App\Http\Controllers\UomController::class, 'create'])->name('item_price.create');
-
-    Route::get('/item_qty', [App\Http\Controllers\UomController::class, 'index'])->name('item_qty.index');
-    Route::get('/item_qty/create', [App\Http\Controllers\UomController::class, 'create'])->name('item_qty.create');
+    Route::get('/transactionItem', [App\Http\Controllers\TransactionItemController::class, 'index'])->name('transactionItem.index');
+    Route::get('/transactionItem/in', [App\Http\Controllers\TransactionItemController::class, 'in'])->name('transactionItem.in');
+    Route::get('/transactionItem/out', [App\Http\Controllers\TransactionItemController::class, 'out'])->name('transactionItem.out');
+    Route::post('/transactionItem/out/pay', [App\Http\Controllers\TransactionItemController::class, 'outPay'])->name('transactionItem.outPay');
 });

@@ -4,35 +4,40 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Item extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     protected $table = 'items';
 
     protected $fillable = [
-        'item_category_id', 
-        'item_type_id', 
+        'item_category_id',
+        'item_type_id',
         'uom_id',
         'code',
         'name',
         'img_url',
         'discount',
         'description',
-        'created_by', 
+        'created_by',
         'updated_by'
     ];
 
-    public function itemCategories(){
+    public function itemCategories()
+    {
         return $this->belongsTo(ItemCategories::class, 'item_category_id');
     }
 
-    public function itemType(){
+    public function itemType()
+    {
         return $this->belongsTo(ItemType::class, 'item_type_id');
     }
 
-    public function uom(){
+    public function uom()
+    {
         return $this->belongsTo(Uom::class, 'uom_id');
     }
 

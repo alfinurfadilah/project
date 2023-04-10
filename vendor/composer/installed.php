@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'bc24788ce5d99e9a67ffccae81ed5ec5f9b755b8',
+        'reference' => 'ae0f5777e218959303b9fd3998e3e56bac88cda1',
         'name' => 'laravel/laravel',
         'dev' => true,
     ),
@@ -24,6 +24,15 @@
             'replaced' => array(
                 0 => '*',
             ),
+        ),
+        'darryldecode/cart' => array(
+            'pretty_version' => '4.2.2',
+            'version' => '4.2.2.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../darryldecode/cart',
+            'aliases' => array(),
+            'reference' => 'bc5ff0e1c7d20d621fa63b3218532f2ae7cbf841',
+            'dev_requirement' => false,
         ),
         'davedevelopment/hamcrest-php' => array(
             'dev_requirement' => true,
@@ -390,7 +399,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'bc24788ce5d99e9a67ffccae81ed5ec5f9b755b8',
+            'reference' => 'ae0f5777e218959303b9fd3998e3e56bac88cda1',
             'dev_requirement' => false,
         ),
         'laravel/pint' => array(
