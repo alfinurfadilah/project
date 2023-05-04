@@ -212,10 +212,43 @@
     <!--end::Card-->
 
     <div class="card">
-        <div class="card-body">
+        <!--begin::Card header-->
+        <div class="card-header border-0 pt-6">
+            <!--begin::Card title-->
+            <div class="card-title">
+                <h4>Daftar Batch</h4>
+            </div>
+            <!--begin::Card title-->
+            <!--begin::Card toolbar-->
+            <div class="card-toolbar">
+                <!--begin::Toolbar-->
+                <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base">
+                    <!--begin::Add customer-->
+                    <a href="{{ route('item.create') }}" class="btn btn-primary" data-bs-target="#kt_modal_atur_stock"
+                        data-bs-toggle="modal" data-item-id="{{ $item->id }}">
+                        <!--begin::Svg Icon | path: assets/media/icons/duotune/arrows/arr087.svg-->
+                        <span class="svg-icon
+                        svg-icon-muted svg-icon-2x">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none">
+                                <rect opacity="0.5" x="11" y="18" width="12" height="2"
+                                    rx="1" transform="rotate(-90 11 18)" fill="black" />
+                                <rect x="6" y="11" width="12" height="2" rx="1"
+                                    fill="black" />
+                            </svg>
+                        </span>
+                        <!--end::Svg Icon-->
+                        Tambah Batch
+                    </a>
+                    <!--end::Add customer-->
+                </div>
+                <!--end::Toolbar-->
+            </div>
+            <!--end::Card toolbar-->
+        </div>
+        <!--end::Card header-->
 
-            @foreach ($item->itemStock as $index => $itemStock)
-            @endforeach
+        <div class="card-body">
 
             <div class="table-responsive">
                 <!--begin::Table-->
@@ -253,8 +286,8 @@
                                 <td>Rp. {{ number_format($itemStock->itemPrice->price) }}</td>
                                 <td class="text-end">
                                     <a href="#" class="btn btn-primary" data-bs-target="#kt_modal_atur_stock"
-                                        data-bs-toggle="modal" data-stock-id="{{ $itemStock->id }}"
-                                        data-qty-id="{{ $itemStock->item_qty_id }}"
+                                        data-bs-toggle="modal" data-item-id="{{ $item->id }}"
+                                        data-stock-id="{{ $itemStock->id }}" data-qty-id="{{ $itemStock->item_qty_id }}"
                                         data-price-id="{{ $itemStock->item_price_id }}"
                                         data-batch-id="{{ $itemStock->batch_stock }}"
                                         data-qty="{{ $itemStock->itemQty->qty }}"
@@ -290,6 +323,7 @@
                 <div class="modal-body">
                     <form action="{{ route('item.updateStock') }}" method="POST" id="formAturStock">
                         @csrf
+                        <input type="hidden" name="itemId">
                         <input type="hidden" name="stockId">
                         <input type="hidden" name="qtyId">
                         <input type="hidden" name="priceId">
@@ -300,6 +334,8 @@
                                         <div class="form-group">
                                             <label class="form-label" for="jumlahStock">Batch ID</label>
                                             <label class="form-control label" id="labelBatchId"></label>
+                                            <input type="text" class="form-control" name="batchId" hidden>
+
                                         </div>
                                     </div>
                                 </div>
@@ -448,6 +484,7 @@
         //triggered when modal is about to be shown
         $('#kt_modal_atur_stock').on('show.bs.modal', function(e) {
             //get data-id attribute of the clicked element
+            var itemId = $(e.relatedTarget).data('item-id');
             var stockId = $(e.relatedTarget).data('stock-id');
             var qtyId = $(e.relatedTarget).data('qty-id');
             var priceId = $(e.relatedTarget).data('price-id');
@@ -459,20 +496,49 @@
             var price = $(e.relatedTarget).data('price');
 
             //populate the textbox
+            $(e.currentTarget).find('input[name="itemId"]').val(itemId);
             $(e.currentTarget).find('input[name="stockId"]').val(stockId);
             $(e.currentTarget).find('input[name="qtyId"]').val(qtyId);
             $(e.currentTarget).find('input[name="priceId"]').val(priceId);
-            $(e.currentTarget).find('#labelBatchId').text(batchId);
+
+            if (batchId == undefined) {
+                $(e.currentTarget).find('input[name="batchId"]').attr("hidden", false);
+                $(e.currentTarget).find('#labelBatchId').attr("hidden", true);
+            } else {
+                $(e.currentTarget).find('#labelBatchId').attr("hidden", false);
+                $(e.currentTarget).find('input[name="batchId"]').attr("hidden", true);
+                $(e.currentTarget).find('#labelBatchId').text(batchId);
+            }
+
             $(e.currentTarget).find('input[name="jumlahStock"]').val(qty);
+
+
+            console.log(productionDate);
             // init datepicker
-            $('#datepicker_tgl_produksi').flatpickr({
-                dateFormat: "d F Y",
-                defaultDate: productionDate,
-            });
-            $('#datepicker_tgl_kadaluarsa').flatpickr({
-                dateFormat: "d F Y",
-                defaultDate: expiredDate,
-            });
+            if ((productionDate == undefined) && (expiredDate == undefined)) {
+
+                $('#datepicker_tgl_produksi').flatpickr({
+                    dateFormat: "d F Y",
+                    defaultDate: ''
+                });
+                $('#datepicker_tgl_kadaluarsa').flatpickr({
+                    dateFormat: "d F Y",
+                    defaultDate: ''
+                });
+
+            } else {
+
+                $('#datepicker_tgl_produksi').flatpickr({
+                    dateFormat: "d F Y",
+                    defaultDate: productionDate,
+                });
+                $('#datepicker_tgl_kadaluarsa').flatpickr({
+                    dateFormat: "d F Y",
+                    defaultDate: expiredDate,
+                });
+
+            }
+
             $(e.currentTarget).find('input[name="hargaModal"]').val(currentPrice);
             $(e.currentTarget).find('input[name="hargaJual"]').val(price);
         });

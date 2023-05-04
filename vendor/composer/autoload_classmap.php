@@ -67,6 +67,8 @@ return array(
     'App\\Models\\Supplier' => $baseDir . '/app/Models/Supplier.php',
     'App\\Models\\Transaction' => $baseDir . '/app/Models/Transaction.php',
     'App\\Models\\TransactionCategory' => $baseDir . '/app/Models/TransactionCategory.php',
+    'App\\Models\\TransactionHistory' => $baseDir . '/app/Models/TransactionHistory.php',
+    'App\\Models\\TransactionItem' => $baseDir . '/app/Models/TransactionItem.php',
     'App\\Models\\TransactionType' => $baseDir . '/app/Models/TransactionType.php',
     'App\\Models\\Uom' => $baseDir . '/app/Models/Uom.php',
     'App\\Models\\User' => $baseDir . '/app/Models/User.php',

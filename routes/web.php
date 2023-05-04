@@ -89,7 +89,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete('/supplier/delete/{id}', [App\Http\Controllers\SupplierController::class, 'destroy'])->name('supplier.delete');
 
     Route::get('/transactionItem', [App\Http\Controllers\TransactionItemController::class, 'index'])->name('transactionItem.index');
-    Route::get('/transactionItem/in', [App\Http\Controllers\TransactionItemController::class, 'in'])->name('transactionItem.in');
-    Route::get('/transactionItem/out', [App\Http\Controllers\TransactionItemController::class, 'out'])->name('transactionItem.out');
-    Route::post('/transactionItem/out/pay', [App\Http\Controllers\TransactionItemController::class, 'outPay'])->name('transactionItem.outPay');
+    Route::post('/transactionItem/store', [App\Http\Controllers\TransactionItemController::class, 'store'])->name('transactionItem.store');
+    Route::post('/transactionItem/addCart', [App\Http\Controllers\TransactionItemController::class, 'addCart'])->name('transactionItem.addCart');
+    Route::post('/transactionItem/increaseCart', [App\Http\Controllers\TransactionItemController::class, 'increaseCart'])->name('transactionItem.increaseCart');
+    Route::post('/transactionItem/decreaseCart', [App\Http\Controllers\TransactionItemController::class, 'decreaseCart'])->name('transactionItem.decreaseCart');
+    Route::post('/transactionItem/addDiscount', [App\Http\Controllers\TransactionItemController::class, 'addDiscount'])->name('transactionItem.addDiscount');
+    Route::post('/transactionItem/removeDiscount', [App\Http\Controllers\TransactionItemController::class, 'removeDiscount'])->name('transactionItem.removeDiscount');
 });

@@ -216,32 +216,84 @@ class ItemController extends Controller
 
         try {
 
-            $data = [
-                // 'qty' => (($itemQty->find($request->qtyId)->qty) + ($request->jumlahStock)),
-                'qty' => $request->jumlahStock,
-                'qty_change' => $request->jumlahStock
-            ];
+            if (!$request->stockId && !$request->qtyId && !$request->priceId) {
+                $itemQtyId = [];
+                $itemPriceId = [];
 
-            $itemQty->find($request->qtyId)->update($data);
+                if ($request->batchId) {
+                    if ($request->jumlahStock) {
+                        $itemQty = ItemQty::create([
+                            'qty' => $request->jumlahStock,
+                            'qty_change' => $request->jumlahStock
+                        ]);
 
-            $data = [
-                'current_price' => $request->hargaModal,
-                'price' => $request->hargaJual
-            ];
+                        $itemQtyId = $itemQty->id;
+                    }
 
-            $itemPrice->find($request->priceId)->update($data);
+                    if ($request->hargaModal || $request->hargaJual) {
 
-            $stringTglProduksi = strtotime($request->tglProduksi);
-            $tglProduksi = date('Y-m-d', $stringTglProduksi);
+                        $ItemPrice = ItemPrice::create([
+                            'current_price' => $request->hargaModal,
+                            'price' => $request->hargaJual
+                        ]);
 
-            $stringTglKadaluarsa = strtotime($request->tglKadaluarsa);
-            $tglKadaluarsa = date('Y-m-d', $stringTglKadaluarsa);
-            $data = [
-                'expired_date' => $tglKadaluarsa,
-                'production_date' => $tglProduksi
-            ];
+                        $itemPriceId = $ItemPrice->id;
+                    }
 
-            $itemStock->find($request->stockId)->update($data);
+                    $stringTglProduksi = strtotime($request->tglProduksi);
+                    $tglProduksi = date('Y-m-d', $stringTglProduksi);
+
+                    $stringTglKadaluarsa = strtotime($request->tglKadaluarsa);
+                    $tglKadaluarsa = date('Y-m-d', $stringTglKadaluarsa);
+
+                    $itemStock = ItemStock::create([
+                        'item_id' => $request->itemId,
+                        'batch_stock' => $request->batchId,
+                        'item_qty_id' => $itemQtyId,
+                        'item_price_id' => $itemPriceId,
+                        'production_date' => $tglProduksi,
+                        'expired_date' => $tglKadaluarsa,
+                        'created_by' => Auth::id()
+                    ]);
+
+                    ItemHistory::create([
+                        'item_stock_id' => $itemStock->id,
+                        'transaction_type_id' => 1,
+                        'qty' => $request->qtyStock,
+                        'qty_current' => 0,
+                        'qty_change' => $request->qtyStock,
+                        'description' => "Tambah item baru",
+                        'created_by' => Auth::id()
+                    ]);
+                }
+            } else {
+                $data = [
+                    // 'qty' => (($itemQty->find($request->qtyId)->qty) + ($request->jumlahStock)),
+                    'qty' => $request->jumlahStock,
+                    'qty_change' => $request->jumlahStock
+                ];
+
+                $itemQty->find($request->qtyId)->update($data);
+
+                $data = [
+                    'current_price' => $request->hargaModal,
+                    'price' => $request->hargaJual
+                ];
+
+                $itemPrice->find($request->priceId)->update($data);
+
+                $stringTglProduksi = strtotime($request->tglProduksi);
+                $tglProduksi = date('Y-m-d', $stringTglProduksi);
+
+                $stringTglKadaluarsa = strtotime($request->tglKadaluarsa);
+                $tglKadaluarsa = date('Y-m-d', $stringTglKadaluarsa);
+                $data = [
+                    'expired_date' => $tglKadaluarsa,
+                    'production_date' => $tglProduksi
+                ];
+
+                $itemStock->find($request->stockId)->update($data);
+            }
 
             DB::commit();
             return redirect()->back()->with('success', 'Data Berhasil Disimpan');

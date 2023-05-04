@@ -590,6 +590,8 @@ class ComposerStaticInitff8278783ebbd3194b7bf60badd4c145
         'App\\Models\\Supplier' => __DIR__ . '/../..' . '/app/Models/Supplier.php',
         'App\\Models\\Transaction' => __DIR__ . '/../..' . '/app/Models/Transaction.php',
         'App\\Models\\TransactionCategory' => __DIR__ . '/../..' . '/app/Models/TransactionCategory.php',
+        'App\\Models\\TransactionHistory' => __DIR__ . '/../..' . '/app/Models/TransactionHistory.php',
+        'App\\Models\\TransactionItem' => __DIR__ . '/../..' . '/app/Models/TransactionItem.php',
         'App\\Models\\TransactionType' => __DIR__ . '/../..' . '/app/Models/TransactionType.php',
         'App\\Models\\Uom' => __DIR__ . '/../..' . '/app/Models/Uom.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',

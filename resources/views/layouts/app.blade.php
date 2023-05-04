@@ -468,7 +468,7 @@
                         <!--begin::Mobile logo-->
                         <div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0">
                             <a href="../../demo9/dist/index.html">
-                                <img alt="Logo" src="assets/media/logos/logo-demo9.svg" class="h-35px" />
+                                <img alt="Logo" src="{{ asset('themes/metronic-demo9/media/logos/logo-demo9.svg') }}" class="h-35px" />
                             </a>
                         </div>
                         <!--end::Mobile logo-->
@@ -494,6 +494,7 @@
                 </div>
                 <!--end::Header tablet and mobile-->
                 <!--begin::Header-->
+                @if (!Route::is('transactionItem.index'))    
                 <div id="kt_header" class="header py-6 py-lg-0" data-kt-sticky="true" data-kt-sticky-name="header"
                     data-kt-sticky-offset="{lg: '300px'}">
                     <!--begin::Container-->
@@ -602,10 +603,11 @@
                     <!--end::Container-->
                     <div class="header-offset"></div>
                 </div>
+                @endif
                 <!--end::Header-->
 
                 <!--begin::Content-->
-                <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+                <div class="d-flex flex-column flex-column-fluid py-10 {{ Route::is('transactionItem.index') ? 'py-10' : 'content' }}" id="kt_content">
                     <!--begin::Container-->
                     <div class="container-xxl" id="kt_content_container">
                         @yield('content')
@@ -615,6 +617,7 @@
                 <!--end::Content-->
 
                 <!--begin::Footer-->
+                @if (!Route::is('transactionItem.index'))
                 <div class="footer py-4 d-flex flex-lg-column" id="kt_footer">
                     <!--begin::Container-->
                     <div class="container-xxl d-flex flex-column flex-md-row flex-stack">
@@ -643,6 +646,8 @@
                     </div>
                     <!--end::Container-->
                 </div>
+                @endif
+                
                 <!--end::Footer-->
             </div>
             <!--end::Wrapper-->
