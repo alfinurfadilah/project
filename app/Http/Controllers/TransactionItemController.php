@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Transaction;
+use App\Models\TransactionHistory;
 use App\Models\Item;
 use App\Models\ItemQty;
 use App\Models\ItemPrice;
 use App\Models\ItemStock;
+use App\Models\ItemHistory;
 use App\Http\Controllers\Controller;
-use Auth;
+use Illuminate\Support\Facades\Auth;
+
 use DB;
 
 use Darryldecode\Cart\CartCondition;
@@ -260,29 +263,9 @@ class TransactionItemController extends Controller
         // dd($request->all());
 
         // Get data cart
-        $items = \Cart::session(Auth()->id())->getContent();
+        $cartItems = \Cart::session(Auth()->id())->getContent();
 
         // dd($items);
-
-        // if (\Cart::isEmpty()) {
-        //     $cart_data = [];
-        // } else {
-        //     foreach ($items as $row) {
-        //         $cart[] = [
-        //             'rowId' => $row->id,
-        //             'name' => $row->name,
-        //             'qty' => $row->quantity,
-        //             'pricesingle' => $row->price,
-        //             'price' => $row->getPriceSum(),
-        //             'created_at' => $row->attributes['created_at'],
-        //             'associatedModel' => $row->associatedModel
-        //         ];
-        //     }
-
-        //     $cart_data = $cart;
-        // }
-
-        // dd($cart_data);
 
         //get total and sub total
         $sub_total = \Cart::session(Auth()->id())->getSubTotal();
@@ -292,49 +275,81 @@ class TransactionItemController extends Controller
         $new_condition = \Cart::session(Auth()->id())->getCondition('Discount');
         if ($new_condition) {
             $diskon = $new_condition->getCalculatedValue($sub_total);
-            $diskonValue = $new_condition->getValue(); // the value of the condition
+            // $diskonValue = $new_condition->getValue(); // the value of the condition
         }
 
-        $data_total = [
-            'sub_total' => $sub_total,
-            'total' => $total,
-            'diskon' => $diskon ?? 0,
-            'diskon_value' => $diskonValue ?? ''
-        ];
-
-        // cek stock ke item_stock
+        // Proses transaksi item
         if (\Cart::isEmpty()) {
-            // retrun data cart kosong
+            $sen['success'] = false;
+            $sen['message'] = "Transaksi gagal, data cart kosong";
         } else {
-            foreach ($items as $row) {
-                // dd($row->id);
-                $itemStock = ItemStock::where('item_id', '=', $row->id)->get();
+            foreach ($cartItems as $row) {
+                $itemStock = ItemStock::find($row->id);
 
-                dd(count($itemStock));
+                $itemStockQty = $itemStock->itemQty->qty;
+                $totalStockBerkurang = $itemStockQty - $row->quantity;
 
-                foreach ($itemStock as $rowStock) {
-                    $itemQty = ItemQty::find($rowStock->item_qty_id);
-
-                    dd(count($itemQty));
-
-                    // if ($itemQty->qty >= $row->quantity) {
-                    //     # code...
-                    // }
+                // 1. kurangin dulu qty stock nya di tabel item_qties
+                if ($itemStock->itemQty->find($itemStock->item_qty_id)->update([
+                    'qty' => $totalStockBerkurang,
+                    'qty_change' => $totalStockBerkurang
+                ])) {
+                    // 2. baru tambahkan di item_history
+                    if (ItemHistory::create([
+                        'item_stock_id' => $itemStock->id,
+                        'transaction_type_id' => 2,
+                        'qty' => $row->quantity,
+                        'qty_current' => $itemStock->itemQty->qty,
+                        'qty_change' => $row->quantity,
+                        'description' => "Pengurangan stock dari transaksi",
+                        'created_by' => Auth::id()
+                    ])) {
+                        // 3. selanjutnya simpan ke tabel transaction
+                        $transaction = Transaction::create([
+                            'qty_out' => $row->quantity,
+                            'total' => $total,
+                            'tax' => 0,
+                            'money_changes' => $request->kembalian,
+                            'payment' => $request->nominalPembayaran,
+                            'discount_user' => $diskon ?? 0,
+                            'service_charge' => 0,
+                            'sub_total' => $sub_total,
+                            'user_id' => Auth::id(),
+                            'created_by' => Auth::id()
+                        ]);
+                        if ($transaction) {
+                            // 4. terakhir simpan di transaksi history
+                            if (TransactionHistory::create([
+                                'transaction_id' => $transaction->id,
+                                'type_transaction' => 2,
+                                'qty_out' => $row->quantity,
+                                'total' => $total,
+                                'tax' => 0,
+                                'money_changes' => $request->kembalian,
+                                'payment' => $request->nominalPembayaran,
+                                'discount_user' => $diskon ?? 0,
+                                'service_charge' => 0,
+                                'sub_total' => $sub_total,
+                                'user_id' => Auth::id(),
+                                'created_by' => Auth::id()
+                            ])) {
+                                \Cart::session(Auth()->id())->remove($row->id);
+                                $sen['success'] = true;
+                                $sen['message'] = "Transaksi berhasil di simpan";
+                            } else {
+                                $sen['success'] = false;
+                                $sen['message'] = "Transaksi gagal di simpan";
+                            }
+                        }
+                    }
+                } else {
+                    $sen['success'] = false;
+                    $sen['message'] = "Transaksi gagal di simpan";
                 }
-
-                // $cart[] = [
-                //     'rowId' => $row->id,
-                //     'name' => $row->name,
-                //     'qty' => $row->quantity,
-                //     'pricesingle' => $row->price,
-                //     'price' => $row->getPriceSum(),
-                //     'created_at' => $row->attributes['created_at'],
-                //     'associatedModel' => $row->associatedModel
-                // ];
             }
-
-            $cart_data = $cart;
         }
+
+        return response()->json(['data' => $sen]);
     }
 
     /**

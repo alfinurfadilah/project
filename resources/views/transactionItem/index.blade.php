@@ -636,15 +636,27 @@
                 },
                 type: "POST",
                 beforeSend: function() {
+                    $('#modalDetailTransaksi').modal('hide');
                     $('#' + divFormId).addClass('overlay overlay-block');
                     $("#" + overlayId).show();
                 },
                 success: function(response) {
                     console.log(response);
                     if (response.data.success == true) {
-                        getCart();
-                        $('#' + divFormId).removeClass('overlay overlay-block');
-                        $("#" + overlayId).hide();
+                        Swal.fire({
+                            html: response.data.message,
+                            icon: "success",
+                            buttonsStyling: false,
+                            confirmButtonText: "OK",
+                            customClass: {
+                                confirmButton: "btn btn-primary"
+                            }
+                        }).then(function(isConfirm) {
+                            getCart();
+                            removeDiscount();
+                            $('#' + divFormId).removeClass('overlay overlay-block');
+                            $("#" + overlayId).hide();
+                        });
                     } else {
                         Swal.fire({
                             html: response.data.message,
