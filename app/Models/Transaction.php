@@ -27,4 +27,9 @@ class Transaction extends Model
         'created_by',
         'updated_by'
     ];
+
+    public function item()
+    {
+        return $this->belongsTo(Item::class, 'item_id');
+    }
 }

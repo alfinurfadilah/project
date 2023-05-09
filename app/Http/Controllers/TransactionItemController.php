@@ -10,6 +10,7 @@ use App\Models\ItemPrice;
 use App\Models\ItemStock;
 use App\Models\ItemHistory;
 use App\Http\Controllers\Controller;
+use App\Models\TransactionItem;
 use Illuminate\Support\Facades\Auth;
 
 use DB;
@@ -47,6 +48,7 @@ class TransactionItemController extends Controller
             foreach ($items as $row) {
                 $cart[] = [
                     'rowId' => $row->id,
+                    'batch_stock' => $row->attributes['batch_stock'],
                     'name' => $row->name,
                     'qty' => $row->quantity,
                     'pricesingle' => $row->price,
@@ -114,19 +116,25 @@ class TransactionItemController extends Controller
         // dd($request->all());
         $idItem = $request->idBarang;
         $idStock = $request->idStock;
+        $batchStock = $request->batchStock;
+
         $product = Item::find($idItem);
-        $productStock = ItemStock::find($idStock);
+        // $productStock = ItemStock::find($idItem);
+        $itemStock = ItemStock::where('id', $idStock)
+            ->where('item_id', $idItem)
+            ->where('batch_stock', $batchStock)->first();
+
+        $stockProduk = $itemStock->itemQty->qty;
 
         $cart = \Cart::session(Auth()->id())->getContent();
-        $cek_itemId = $cart->whereIn('id', $idItem);
-
-        // dd($product, $cek_itemId);
+        $cek_itemId = $cart->whereIn('id', $idStock);
 
         if ($cek_itemId->isNotEmpty()) {
-            if ($product->itemStock[0]->itemQty->qty == $cek_itemId[$idItem]->quantity) {
+            $qtyOnCart = $cek_itemId[$idStock]->quantity;
+
+            if ($stockProduk == $qtyOnCart) {
                 $sen['success'] = false;
                 $sen['message'] = "Jumlah item kurang";
-                // return redirect()->back()->with('error', 'jumlah item kurang');
             } else {
                 \Cart::session(Auth()->id())->update($idStock, array(
                     'quantity' => 1
@@ -138,9 +146,10 @@ class TransactionItemController extends Controller
             \Cart::session(Auth()->id())->add(array(
                 'id' => $idStock,
                 'name' => $product->name,
-                'price' => $productStock->itemPrice->price,
+                'price' => $itemStock->itemPrice->price,
                 'quantity' => 1,
                 'attributes' => array(
+                    'batch_stock' => $itemStock->batch_stock,
                     'created_at' => date('Y-m-d H:i:s')
                 ),
                 'associatedModel' => $product
@@ -155,14 +164,17 @@ class TransactionItemController extends Controller
     public function increaseCart(Request $request)
     {
         $id = $request->itemId;
-        // dd($id);
+        $batchStock = $request->batchStock;
 
-        $product = ItemStock::find($id);
+        $itemStock = ItemStock::find($id);
+
+        $itemStock = ItemStock::where('id', $id)
+            ->where('batch_stock', $batchStock)->first();
 
         $cart = \Cart::session(Auth()->id())->getContent();
         $cek_itemId = $cart->whereIn('id', $id);
 
-        if ($product->itemQty->qty == $cek_itemId[$id]->quantity) {
+        if ($itemStock->itemQty->qty == $cek_itemId[$id]->quantity) {
             $sen['success'] = false;
             $sen['message'] = "Jumlah item kurang";
         } else {
@@ -265,11 +277,12 @@ class TransactionItemController extends Controller
         // Get data cart
         $cartItems = \Cart::session(Auth()->id())->getContent();
 
-        // dd($items);
+        // dd($cartItems);
 
         //get total and sub total
         $sub_total = \Cart::session(Auth()->id())->getSubTotal();
         $total = \Cart::session(Auth()->id())->getTotal();
+        $cartTotalQuantity = \Cart::session(Auth()->id())->getTotalQuantity();
 
         // get condition (discount or tax or other condition)
         $new_condition = \Cart::session(Auth()->id())->getCondition('Discount');
@@ -283,65 +296,77 @@ class TransactionItemController extends Controller
             $sen['success'] = false;
             $sen['message'] = "Transaksi gagal, data cart kosong";
         } else {
-            foreach ($cartItems as $row) {
-                $itemStock = ItemStock::find($row->id);
-
-                $itemStockQty = $itemStock->itemQty->qty;
-                $totalStockBerkurang = $itemStockQty - $row->quantity;
-
-                // 1. kurangin dulu qty stock nya di tabel item_qties
-                if ($itemStock->itemQty->find($itemStock->item_qty_id)->update([
-                    'qty' => $totalStockBerkurang,
-                    'qty_change' => $totalStockBerkurang
+            // 1. simpan ke tabel transaction
+            $transaction = Transaction::create([
+                'qty_out' => $cartTotalQuantity,
+                'total' => $total,
+                'tax' => 0,
+                'money_changes' => $request->kembalian,
+                'payment' => $request->nominalPembayaran,
+                'discount_user' => $diskon ?? 0,
+                'service_charge' => 0,
+                'sub_total' => $sub_total,
+                'user_id' => Auth::id(),
+                'created_by' => Auth::id()
+            ]);
+            if ($transaction) {
+                // 2. simpan di transaksi history
+                if (TransactionHistory::create([
+                    'transaction_id' => $transaction->id,
+                    'type_transaction' => 2,
+                    'qty_out' => $cartTotalQuantity,
+                    'total' => $total,
+                    'tax' => 0,
+                    'money_changes' => $request->kembalian,
+                    'payment' => $request->nominalPembayaran,
+                    'discount_user' => $diskon ?? 0,
+                    'service_charge' => 0,
+                    'sub_total' => $sub_total,
+                    'user_id' => Auth::id(),
+                    'created_by' => Auth::id()
                 ])) {
-                    // 2. baru tambahkan di item_history
-                    if (ItemHistory::create([
-                        'item_stock_id' => $itemStock->id,
-                        'transaction_type_id' => 2,
-                        'qty' => $row->quantity,
-                        'qty_current' => $itemStock->itemQty->qty,
-                        'qty_change' => $row->quantity,
-                        'description' => "Pengurangan stock dari transaksi",
-                        'created_by' => Auth::id()
-                    ])) {
-                        // 3. selanjutnya simpan ke tabel transaction
-                        $transaction = Transaction::create([
-                            'qty_out' => $row->quantity,
-                            'total' => $total,
-                            'tax' => 0,
-                            'money_changes' => $request->kembalian,
-                            'payment' => $request->nominalPembayaran,
-                            'discount_user' => $diskon ?? 0,
-                            'service_charge' => 0,
-                            'sub_total' => $sub_total,
-                            'user_id' => Auth::id(),
-                            'created_by' => Auth::id()
-                        ]);
-                        if ($transaction) {
-                            // 4. terakhir simpan di transaksi history
-                            if (TransactionHistory::create([
-                                'transaction_id' => $transaction->id,
-                                'type_transaction' => 2,
-                                'qty_out' => $row->quantity,
-                                'total' => $total,
-                                'tax' => 0,
-                                'money_changes' => $request->kembalian,
-                                'payment' => $request->nominalPembayaran,
-                                'discount_user' => $diskon ?? 0,
-                                'service_charge' => 0,
-                                'sub_total' => $sub_total,
-                                'user_id' => Auth::id(),
+
+                    foreach ($cartItems as $row) {
+                        $itemStock = ItemStock::find($row->id);
+
+                        $itemStockQty = $itemStock->itemQty->qty;
+                        $totalStockBerkurang = $itemStockQty - $row->quantity;
+
+                        // 3. kurangin dulu qty stock nya di tabel item_qties
+                        if ($itemStock->itemQty->find($itemStock->item_qty_id)->update([
+                            'qty' => $totalStockBerkurang,
+                            'qty_change' => $totalStockBerkurang
+                        ])) {
+                            // 4. baru tambahkan di item_history
+                            ItemHistory::create([
+                                'item_stock_id' => $itemStock->id,
+                                'transaction_type_id' => 2,
+                                'qty' => $row->quantity,
+                                'qty_current' => $itemStock->itemQty->qty,
+                                'qty_change' => $row->quantity,
+                                'description' => "Pengurangan stock dari transaksi",
                                 'created_by' => Auth::id()
-                            ])) {
-                                \Cart::session(Auth()->id())->remove($row->id);
-                                $sen['success'] = true;
-                                $sen['message'] = "Transaksi berhasil di simpan";
-                            } else {
-                                $sen['success'] = false;
-                                $sen['message'] = "Transaksi gagal di simpan";
-                            }
+                            ]);
+                        } else {
+                            $sen['success'] = false;
+                            $sen['message'] = "Transaksi gagal di simpan";
                         }
+
+                        // 5. tambahkan juga ke transaction_item
+                        TransactionItem::create([
+                            'transaction_id' => $transaction->id,
+                            'item_id' => $itemStock->item_id,
+                            'selling_price' => $row->price,
+                            'qty' => $row->quantity,
+                            'batch_id' => $itemStock->batch_stock,
+                        ]);
+
+                        // 6. remove item di cart
+                        \Cart::session(Auth()->id())->remove($row->id);
                     }
+
+                    $sen['success'] = true;
+                    $sen['message'] = "Transaksi berhasil di simpan";
                 } else {
                     $sen['success'] = false;
                     $sen['message'] = "Transaksi gagal di simpan";
@@ -395,5 +420,44 @@ class TransactionItemController extends Controller
     public function destroy(Transaction $transaction)
     {
         //
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Transaction  $transaction
+     * @return \Illuminate\Http\Response
+     */
+    public function history(TransactionHistory $transactionHistory)
+    {
+        //
+        $breadcumb = "Riwayat Transaksi";
+
+        $transactionHistory = $transactionHistory->when(request('search'), function ($query) {
+            return $query->where('transaction_id', 'like', '%' . request('search') . '%');
+        })
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        return view('transactionItem.history', compact('breadcumb', 'transactionHistory'));
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Transaction  $transaction
+     * @return \Illuminate\Http\Response
+     */
+    public function detail(TransactionHistory $transactionHistory, $id)
+    {
+        //
+        $breadcumb = "Detail Transaksi";
+
+        // dd($id);
+
+        $transactionHistory = $transactionHistory->find($id);
+        $transactionItem = TransactionItem::where("transaction_id", $id)->get();
+
+        return view('transactionItem.detail', compact('breadcumb', 'transactionHistory', 'transactionItem'));
     }
 }

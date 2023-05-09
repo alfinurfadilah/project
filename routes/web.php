@@ -89,6 +89,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete('/supplier/delete/{id}', [App\Http\Controllers\SupplierController::class, 'destroy'])->name('supplier.delete');
 
     Route::get('/transactionItem', [App\Http\Controllers\TransactionItemController::class, 'index'])->name('transactionItem.index');
+    Route::get('/transactionHistory', [App\Http\Controllers\TransactionItemController::class, 'history'])->name('transactionItem.history');
+    Route::get('/transactionHistory/detail/{id}', [App\Http\Controllers\TransactionItemController::class, 'detail'])->name('transactionItem.detail');
     Route::post('/transactionItem/store', [App\Http\Controllers\TransactionItemController::class, 'store'])->name('transactionItem.store');
     Route::post('/transactionItem/addCart', [App\Http\Controllers\TransactionItemController::class, 'addCart'])->name('transactionItem.addCart');
     Route::post('/transactionItem/increaseCart', [App\Http\Controllers\TransactionItemController::class, 'increaseCart'])->name('transactionItem.increaseCart');

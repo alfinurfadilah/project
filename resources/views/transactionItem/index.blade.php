@@ -104,47 +104,49 @@
                                         <tbody>
                                             @foreach ($products as $index => $item)
                                                 @foreach ($item->itemStock as $itemStock)
-                                                    <tr>
-                                                        <td>
-                                                            <div class="d-flex align-items-center">
-                                                                <!--begin::Thumbnail-->
-                                                                <a href="{{ $item->img_url ?? asset('themes/metronic-demo9/media/illustrations/dozzy-1/13.png') }}"
-                                                                    class="symbol symbol-50px">
-                                                                    <span class="symbol-label"
-                                                                        style="background-image: url('{{ $item->img_url ?? asset('themes/metronic-demo9/media/illustrations/dozzy-1/13.png') }}')"></span>
-                                                                </a>
-                                                                <!--end::Thumbnail-->
+                                                    @if ($itemStock->itemQty->qty > 0)
+                                                        <tr>
+                                                            <td>
+                                                                <div class="d-flex align-items-center">
+                                                                    <!--begin::Thumbnail-->
+                                                                    <a href="{{ $item->img_url ?? asset('themes/metronic-demo9/media/illustrations/dozzy-1/13.png') }}"
+                                                                        class="symbol symbol-50px">
+                                                                        <span class="symbol-label"
+                                                                            style="background-image: url('{{ $item->img_url ?? asset('themes/metronic-demo9/media/illustrations/dozzy-1/13.png') }}')"></span>
+                                                                    </a>
+                                                                    <!--end::Thumbnail-->
 
-                                                                <div class="ms-5">
-                                                                    <!--begin::Title-->
-                                                                    <label
-                                                                        class="text-gray-800 text-hover-primary fs-5 fw-bold">{{ Str::words($item->name, 6) }}</label>
-                                                                    <!--end::Title-->
+                                                                    <div class="ms-5">
+                                                                        <!--begin::Title-->
+                                                                        <label
+                                                                            class="text-gray-800 text-hover-primary fs-5 fw-bold">{{ Str::words($item->name, 6) }}</label>
+                                                                        <!--end::Title-->
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </td>
-                                                        <!--begin::Action=-->
-                                                        <td class="text-center">
-                                                            <label
-                                                                class="text-primary fw-bolder fs-4">{{ $itemStock->batch_stock }}</label>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <label
-                                                                class="text-primary fw-bolder fs-4">{{ $itemStock->itemQty->qty }}</label>
-                                                        </td>
-                                                        <td class="text-end">
-                                                            <label class="text-primary fw-bolder fs-4">
-                                                                Rp.
-                                                                {{ number_format($itemStock->itemPrice->price) }}</label>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <button type="button" class="btn btn-primary"
-                                                                onclick="addToCart({{ $item->id }}, {{ $itemStock->id }})">
-                                                                <i class="fa fa-plus"></i> Tambah Barang
-                                                            </button>
-                                                        </td>
-                                                        <!--end::Action=-->
-                                                    </tr>
+                                                            </td>
+                                                            <!--begin::Action=-->
+                                                            <td class="text-center">
+                                                                <label
+                                                                    class="text-primary fw-bolder fs-4">{{ $itemStock->batch_stock }}</label>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <label
+                                                                    class="text-primary fw-bolder fs-4">{{ $itemStock->itemQty->qty }}</label>
+                                                            </td>
+                                                            <td class="text-end">
+                                                                <label class="text-primary fw-bolder fs-4">
+                                                                    Rp.
+                                                                    {{ number_format($itemStock->itemPrice->price) }}</label>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <button type="button" class="btn btn-primary"
+                                                                    onclick="addToCart({{ $item->id }}, {{ $itemStock->id }}, '{{ $itemStock->batch_stock }}')">
+                                                                    <i class="fa fa-plus"></i> Tambah Barang
+                                                                </button>
+                                                            </td>
+                                                            <!--end::Action=-->
+                                                        </tr>
+                                                    @endif
                                                 @endforeach
                                             @endforeach
                                         </tbody>
@@ -269,7 +271,7 @@
                                                             class="btn btn-sm btn-icon btn-color-primary btn-active-light-primary rounded-circle"
                                                             data-kt-menu-trigger="click"
                                                             data-kt-menu-placement="bottom-end"
-                                                            onclick="increaseCart({{ $item['rowId'] }})">
+                                                            onclick="increaseCart({{ $item['rowId'] }}, '{{ $item['batch_stock'] }}')">
 
                                                             <!--begin::Svg Icon | path: assets/media/icons/duotune/arrows/arr013.svg-->
                                                             <span class="svg-icon svg-icon-2">
@@ -781,7 +783,7 @@
                                                 class="btn btn-sm btn-icon btn-color-primary btn-active-light-primary rounded-circle"
                                                 data-kt-menu-trigger="click"
                                                 data-kt-menu-placement="bottom-end"
-                                                onclick="increaseCart(` + item['rowId'] + `)">
+                                                onclick="increaseCart(` + item['rowId'] + `,'` + item['batch_stock'] + `')">
 
                                                 <!--begin::Svg Icon | path: assets/media/icons/duotune/arrows/arr013.svg-->
                                                 <span class="svg-icon svg-icon-2">
@@ -903,7 +905,7 @@
             });
         }
 
-        function addToCart(id, idStock) {
+        function addToCart(id, idStock, batchStock) {
             var divFormId = "divTableItem";
             var overlayId = "overlayDivTableItem";
 
@@ -916,7 +918,8 @@
                 url: route,
                 data: {
                     idBarang: id,
-                    idStock: idStock
+                    idStock: idStock,
+                    batchStock: batchStock
                 },
                 type: "POST",
                 beforeSend: function() {
@@ -961,7 +964,7 @@
             });
         }
 
-        function increaseCart(id) {
+        function increaseCart(id, batchStock) {
             var divFormId = "divCart";
             var overlayId = "overlayDivCart";
 
@@ -973,7 +976,8 @@
                 },
                 url: route,
                 data: {
-                    itemId: id
+                    itemId: id,
+                    batchStock: batchStock
                 },
                 type: "POST",
                 beforeSend: function() {

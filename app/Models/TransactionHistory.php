@@ -29,4 +29,9 @@ class TransactionHistory extends Model
         'created_by',
         'updated_by'
     ];
+
+    public function transaction()
+    {
+        return $this->belongsTo(Transaction::class, 'transaction_id');
+    }
 }
