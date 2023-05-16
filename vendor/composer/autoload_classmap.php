@@ -61,6 +61,7 @@ return array(
     'App\\Models\\ItemStock' => $baseDir . '/app/Models/ItemStock.php',
     'App\\Models\\ItemType' => $baseDir . '/app/Models/ItemType.php',
     'App\\Models\\Permission' => $baseDir . '/app/Models/Permission.php',
+    'App\\Models\\Ppn' => $baseDir . '/app/Models/Ppn.php',
     'App\\Models\\Role' => $baseDir . '/app/Models/Role.php',
     'App\\Models\\RolePermission' => $baseDir . '/app/Models/RolePermission.php',
     'App\\Models\\RoleUser' => $baseDir . '/app/Models/RoleUser.php',

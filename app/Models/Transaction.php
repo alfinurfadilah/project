@@ -23,6 +23,7 @@ class Transaction extends Model
         'discount_user',
         'service_charge',
         'sub_total',
+        'ppn',
         'user_id',
         'created_by',
         'updated_by'

@@ -139,9 +139,10 @@
                                                                     {{ number_format($itemStock->itemPrice->price) }}</label>
                                                             </td>
                                                             <td class="text-center">
-                                                                <button type="button" class="btn btn-primary"
-                                                                    onclick="addToCart({{ $item->id }}, {{ $itemStock->id }}, '{{ $itemStock->batch_stock }}')">
-                                                                    <i class="fa fa-plus"></i> Tambah Barang
+                                                                <button type="button" class="btn btn-primary btn-sm"
+                                                                    onclick="addToCart({{ $item->id }}, {{ $itemStock->id }}, '{{ $itemStock->batch_stock }}')"
+                                                                    title="Tambahkan barang ke keranjang">
+                                                                    <i class="fa fa-plus"></i>
                                                                 </button>
                                                             </td>
                                                             <!--end::Action=-->
@@ -318,21 +319,27 @@
                                 @php
                                     $totalItem = count($cart_data);
                                 @endphp
-                                {{-- @if ($totalItem > 0) --}}
                                 <label for="labelTotal" class="fw-bolder fs-4" id="labelTotal"
                                     style="{{ $totalItem == 0 ? 'display:none;' : '' }}">Total
-                                    (<span id="spanTotalItem">{{ number_format(@$totalItem) }}</span>) :
+                                    (<span id="spanTotalItem">{{ number_format(@$totalItem) }} Items</span>) :
                                     <span id="spanSubTotal" class="text-primary">Rp
                                         {{ number_format(@$data_total['total']) }}</span></label>
 
-                                {{-- @if ($data_total['diskon']) --}}
-                                <br>
-                                <label for="labelDiskon" class="text-muted fs-8" id="labelDiskon"
-                                    style="{{ $data_total['diskon'] == 0 ? 'display:none;' : '' }}">Diskon :
-                                    <span id="spanDiskon" class="text-primary">Rp
-                                        {{ number_format(@$data_total['diskon']) }}</span></label>
-                                {{-- @endif --}}
-                                {{-- @endif --}}
+                                <div class="mt-5">
+                                    <div class="row">
+                                        <label for="labelPPN" class="text-muted fs-6 text-end" id="labelPPN"
+                                            style="{{ $data_total['ppn'] == 0 ? 'display:none;' : '' }}">PPN :
+                                            <span id="spanPPN" class="text-success">Rp
+                                                {{ number_format(@$data_total['ppn']) }}</span></label>
+                                    </div>
+                                    <div class="row">
+                                        <label for="labelDiskon" class="text-muted fs-6 text-end" id="labelDiskon"
+                                            style="{{ $data_total['diskon'] == 0 ? 'display:none;' : '' }}">Diskon
+                                            :
+                                            <span id="spanDiskon" class="text-danger">Rp
+                                                {{ number_format(@$data_total['diskon']) }}</span></label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -341,7 +348,7 @@
                         <div class="card">
                             <div class="card-header">
                                 <div class="card-title">
-                                    <label for="tittleDiscount" class="fw-bolder fs-2">Input Discount</label>
+                                    <label for="tittleDiscount" class="fw-bolder fs-2">Diskon</label>
                                 </div>
                             </div>
                             <div class="card-body">
@@ -517,8 +524,37 @@
                                             <td class="fs-6 text-end text-gray-600" id="detailDiskon">- Rp
                                                 {{ number_format(@$data_total['diskon']) }}</td>
                                         </tr>
+                                        <tr style="{{ $data_total['ppn'] == 0 ? 'display:none;' : '' }}"
+                                            id="trDetailPPN">
+                                            <td class="fs-6 text-gray-600">PPN</td>
+                                            <td class="fs-6 text-end text-gray-600" id="detailPPN">Rp
+                                                {{ number_format(@$data_total['ppn']) }}</td>
+                                        </tr>
                                     </tbody>
                                     <tfoot>
+                                        <tr class="border-top fs-6 fw-bolder text-gray-700">
+                                            <td class="fs-4 align-middle" colspan="2">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <h3 class="fs-4">PPN</h3>
+                                                    </div>
+                                                    <div class="col">
+                                                        <select class="form-select" data-control="select2"
+                                                            data-placeholder="Select an option"
+                                                            onchange="addPPN(this.value)">
+                                                            @foreach ($ppnList as $item)
+                                                                <option value="{{ $item->ppn }}"
+                                                                    @if ($data_total['ppn_value'] != '') @if ($item->ppn . '%' == $data_total['ppn_value']) 
+                                                                            selected @endif
+                                                                @else @if ($item->is_default == 1) selected @endif
+                                                                    @endif>
+                                                                    {{ $item->ppn }}%</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
                                         <tr class="border-top align-top fs-6 fw-bolder text-gray-700">
                                             <td class="fs-4">Metode Pembayaran</td>
                                             <td class="fs-4 text-primary text-end">Cash</td>
@@ -899,6 +935,25 @@
                         $("#divInputDiskon").show();
                     }
 
+                    if (response.data['data_total'].ppn > 0) {
+                        $("#spanPPN").text("Rp " + response.data['data_total'].ppn.toLocaleString(
+                            undefined, {
+                                minimumFractionDigits: 0
+                            }
+                        ));
+                        $("#detailPPN").text("Rp " + response.data['data_total'].ppn.toLocaleString(
+                            undefined, {
+                                minimumFractionDigits: 0
+                            }
+                        ));
+
+                        $("#trDetailPPN").show();
+                        $("#labelPPN").show();
+                    } else {
+                        $("#trDetailPPN").hide();
+                        $("#labelPPN").hide();
+                    }
+
                     $('#' + divFormId).removeClass('overlay overlay-block');
                     $("#" + overlayId).hide();
                 }
@@ -1100,16 +1155,8 @@
                     $("#" + overlayId).show();
                 },
                 success: function(response) {
-                    console.log(response);
                     $('input[name="inputDiscount"]').val('');
                     getCart();
-
-                    $("#spanTotalItem").text(data.length);
-                    $("#spanSubTotal").text("Rp " + response.data['data_total'].sub_total.toLocaleString(
-                        undefined, {
-                            minimumFractionDigits: 0
-                        }
-                    ));
 
                     $('#' + divFormId).removeClass('overlay overlay-block');
                     $("#" + overlayId).hide();
@@ -1155,18 +1202,51 @@
                         success: function(response) {
                             getCart();
 
-                            $("#spanTotalItem").text(data.length);
-                            $("#spanSubTotal").text("Rp " + response.data['data_total'].sub_total
-                                .toLocaleString(
-                                    undefined, {
-                                        minimumFractionDigits: 0
-                                    }
-                                ));
-
                             $('#' + divFormId).removeClass('overlay overlay-block');
                             $("#" + overlayId).hide();
                         }
                     });
+                }
+            });
+        }
+
+        function addPPN(ppnValue) {
+
+            var divFormId = "divCart";
+            var overlayId = "overlayDivCart";
+
+            var route = ppnValue != 0 ? '{{ route('transactionItem.addPPN') }}' :
+                '{{ route('transactionItem.removePPN') }}';
+
+            console.log(route);
+
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: route,
+                data: {
+                    ppn: ppnValue
+                },
+                type: "POST",
+                beforeSend: function() {
+                    $('#' + divFormId).addClass('overlay overlay-block');
+                    $("#" + overlayId).show();
+                },
+                success: function(response) {
+                    getCart();
+                    // console.log(response);
+                    // $('input[name="inputDiscount"]').val('');
+
+                    // $("#spanTotalItem").text(data.length);
+                    // $("#spanSubTotal").text("Rp " + response.data['data_total'].sub_total.toLocaleString(
+                    //     undefined, {
+                    //         minimumFractionDigits: 0
+                    //     }
+                    // ));
+
+                    $('#' + divFormId).removeClass('overlay overlay-block');
+                    $("#" + overlayId).hide();
                 }
             });
         }

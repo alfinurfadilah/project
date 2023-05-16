@@ -97,4 +97,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/transactionItem/decreaseCart', [App\Http\Controllers\TransactionItemController::class, 'decreaseCart'])->name('transactionItem.decreaseCart');
     Route::post('/transactionItem/addDiscount', [App\Http\Controllers\TransactionItemController::class, 'addDiscount'])->name('transactionItem.addDiscount');
     Route::post('/transactionItem/removeDiscount', [App\Http\Controllers\TransactionItemController::class, 'removeDiscount'])->name('transactionItem.removeDiscount');
+    Route::post('/transactionItem/addPPN', [App\Http\Controllers\TransactionItemController::class, 'addPPN'])->name('transactionItem.addPPN');
+    Route::post('/transactionItem/removePPN', [App\Http\Controllers\TransactionItemController::class, 'removePPN'])->name('transactionItem.removePPN');
 });

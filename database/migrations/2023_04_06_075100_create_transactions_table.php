@@ -24,6 +24,7 @@ return new class extends Migration
             $table->float('service_charge');
             $table->integer('sub_total');
             $table->integer('user_id');
+            $table->integer('ppn');
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
             $table->softDeletes();

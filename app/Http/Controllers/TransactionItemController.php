@@ -9,8 +9,9 @@ use App\Models\ItemQty;
 use App\Models\ItemPrice;
 use App\Models\ItemStock;
 use App\Models\ItemHistory;
-use App\Http\Controllers\Controller;
 use App\Models\TransactionItem;
+use App\Models\Ppn;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 use DB;
@@ -39,11 +40,28 @@ class TransactionItemController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
+        $ppnList = Ppn::get();
+
         $items = \Cart::session(Auth()->id())->getContent();
 
         if (\Cart::isEmpty()) {
             $cart_data = [];
             $cart_data_ajax = [];
+
+            foreach ($ppnList as $value) {
+                if ($value->is_default == 1 && $value->ppn != 0) {
+                    // add single condition on a cart bases
+                    $condition = new \Darryldecode\Cart\CartCondition(array(
+                        'name' => 'PPN',
+                        'type' => 'tax',
+                        'target' => 'total', // this condition will be applied to cart's subtotal when getSubTotal() is called.
+                        'value' => $value->ppn . '%'
+                    ));
+
+                    \Cart::condition($condition);
+                    \Cart::session(Auth()->id())->condition($condition);
+                }
+            }
         } else {
             foreach ($items as $row) {
                 $cart[] = [
@@ -66,6 +84,7 @@ class TransactionItemController extends Controller
         //get total and sub total
         $sub_total = \Cart::session(Auth()->id())->getSubTotal();
         $total = \Cart::session(Auth()->id())->getTotal();
+        $subTotalWithoutConditions = \Cart::session(Auth()->id())->getSubTotalWithoutConditions();
 
         // get condition (discount or tax or other condition)
         $new_condition = \Cart::session(Auth()->id())->getCondition('Discount');
@@ -74,16 +93,29 @@ class TransactionItemController extends Controller
             $diskonValue = $new_condition->getValue(); // the value of the condition
         }
 
+        // get condition (discount or tax or other condition)
+        $new_condition = \Cart::session(Auth()->id())->getCondition('PPN');
+        if ($new_condition) {
+            $ppn = $new_condition->getCalculatedValue($sub_total);
+            $ppnValue = $new_condition->getValue(); // the value of the condition
+        }
+
         // dd($diskonValue);
+
+        $cartConditions = \Cart::getConditions();
 
         $data_total = [
             'sub_total' => $sub_total,
+            'sub_total_witout_conditions' => $subTotalWithoutConditions,
             'total' => $total,
             'diskon' => $diskon ?? 0,
-            'diskon_value' => $diskonValue ?? ''
+            'diskon_value' => $diskonValue ?? '',
+
+            'ppn' => $ppn ?? 0,
+            'ppn_value' => $ppnValue ?? '',
         ];
 
-        // dd($data_total);
+        // dd($data_total, $cartConditions);
 
         if (request()->ajax()) {
             return response()->json(['data' => [
@@ -91,7 +123,7 @@ class TransactionItemController extends Controller
                 'data_total' => $data_total,
             ]]);
         } else {
-            return view('transactionItem.index', compact('products', 'cart_data', 'data_total', 'cart_data_ajax', 'breadcumb'));
+            return view('transactionItem.index', compact('products', 'cart_data', 'data_total', 'cart_data_ajax', 'ppnList', 'breadcumb'));
         }
     }
 
@@ -224,9 +256,11 @@ class TransactionItemController extends Controller
             // add single condition on a cart bases
             $condition = new \Darryldecode\Cart\CartCondition(array(
                 'name' => 'Discount',
-                'type' => 'tax',
-                'target' => 'total',
-                'value' => '-' . $request->discount . '%'
+                'type' => 'sale',
+                'target' => 'total', // this condition will be applied to cart's total when getTotal() is called.
+                'value' => '-' . $request->discount . '%',
+                'order' => 1
+
             ));
 
             \Cart::condition($condition);
@@ -234,6 +268,30 @@ class TransactionItemController extends Controller
 
             $sen['success'] = true;
             $sen['message'] = "Berhasil menambahkan diskon";
+        }
+
+        return response()->json(['data' => $sen]);
+    }
+
+
+    public function addPPN(Request $request)
+    {
+        // dd($request->all());
+        if ($request->ppn) {
+            // add single condition on a cart bases
+            $condition = new \Darryldecode\Cart\CartCondition(array(
+                'name' => 'PPN',
+                'type' => 'tx',
+                'target' => 'total', // this condition will be applied to cart's subtotal when getTotal() is called.
+                'value' => $request->ppn . '%',
+                'order' => 2
+            ));
+
+            \Cart::condition($condition);
+            \Cart::session(Auth()->id())->condition($condition);
+
+            $sen['success'] = true;
+            $sen['message'] = "Berhasil menambahkan PPN sebesar " . $request->ppn . "%";
         }
 
         return response()->json(['data' => $sen]);
@@ -257,6 +315,30 @@ class TransactionItemController extends Controller
             }
             $sen['success'] = true;
             $sen['message'] = "Berhasil menghapus diskon pada item";
+        }
+
+
+        return response()->json(['data' => $sen]);
+    }
+
+    public function removePPN()
+    {
+        $conditionName = 'PPN';
+
+        if (\Cart::session(Auth()->id())->isEmpty()) {
+            \Cart::session(Auth()->id())->removeCartCondition($conditionName);
+
+            $sen['success'] = true;
+            $sen['message'] = "Berhasil menghapus PPN";
+        } else {
+            $items = \Cart::session(Auth()->id())->getContent();
+
+            \Cart::session(Auth()->id())->removeCartCondition($conditionName);
+            foreach ($items as $row) {
+                \Cart::session(Auth()->id())->clearItemConditions($row->id);
+            }
+            $sen['success'] = true;
+            $sen['message'] = "Berhasil menghapus PPN";
         }
 
 
@@ -288,7 +370,10 @@ class TransactionItemController extends Controller
         $new_condition = \Cart::session(Auth()->id())->getCondition('Discount');
         if ($new_condition) {
             $diskon = $new_condition->getCalculatedValue($sub_total);
-            // $diskonValue = $new_condition->getValue(); // the value of the condition
+        }
+        $new_condition = \Cart::session(Auth()->id())->getCondition('PPN');
+        if ($new_condition) {
+            $ppn = $new_condition->getCalculatedValue($sub_total);
         }
 
         // Proses transaksi item
@@ -300,7 +385,7 @@ class TransactionItemController extends Controller
             $transaction = Transaction::create([
                 'qty_out' => $cartTotalQuantity,
                 'total' => $total,
-                'tax' => 0,
+                'tax' => $ppn ?? 0,
                 'money_changes' => $request->kembalian,
                 'payment' => $request->nominalPembayaran,
                 'discount_user' => $diskon ?? 0,
@@ -316,7 +401,7 @@ class TransactionItemController extends Controller
                     'type_transaction' => 2,
                     'qty_out' => $cartTotalQuantity,
                     'total' => $total,
-                    'tax' => 0,
+                    'tax' => $ppn ?? 0,
                     'money_changes' => $request->kembalian,
                     'payment' => $request->nominalPembayaran,
                     'discount_user' => $diskon ?? 0,

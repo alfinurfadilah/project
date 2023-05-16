@@ -584,6 +584,7 @@ class ComposerStaticInitff8278783ebbd3194b7bf60badd4c145
         'App\\Models\\ItemStock' => __DIR__ . '/../..' . '/app/Models/ItemStock.php',
         'App\\Models\\ItemType' => __DIR__ . '/../..' . '/app/Models/ItemType.php',
         'App\\Models\\Permission' => __DIR__ . '/../..' . '/app/Models/Permission.php',
+        'App\\Models\\Ppn' => __DIR__ . '/../..' . '/app/Models/Ppn.php',
         'App\\Models\\Role' => __DIR__ . '/../..' . '/app/Models/Role.php',
         'App\\Models\\RolePermission' => __DIR__ . '/../..' . '/app/Models/RolePermission.php',
         'App\\Models\\RoleUser' => __DIR__ . '/../..' . '/app/Models/RoleUser.php',
