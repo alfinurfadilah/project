@@ -304,9 +304,8 @@
                                 </div>
                             </div>
 
-                            {{-- <div data-kt-menu-trigger="click" data-kt-menu-placement="right-start" class="menu-item py-3 {{ Route::is('laporan.pemasukan') ? 'here' : '' }} {{ Route::is('laporan.pengeluaran') ? 'here' : '' }} {{ Route::is('laporan.persediaan') ? 'here' : '' }} {{ Route::is('laporan.labaRugi') ? 'here' : '' }}  "> --}}
                             <div data-kt-menu-trigger="click" data-kt-menu-placement="right-start"
-                                class="menu-item py-3">
+                                class="menu-item py-3 {{ Route::is('reporting.laporanPenjualan') ? 'here' : '' }} {{ Route::is('reporting.laporanTransaksiStock') ? 'here' : '' }}">
                                 <span class="menu-link" title="Reporting" data-bs-toggle="tooltip"
                                     data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
                                     <span class="menu-icon">
@@ -332,27 +331,26 @@
                                         </div>
                                     </div>
                                     <div class="menu-item">
-                                        {{-- <a class="menu-link {{ Route::is('product.index') ? 'active' : '' }}" href="{{route('laporan.pemasukan')}}"> --}}
-                                        <a class="menu-link" href="#">
-                                            <span class="menu-bullet">
+                                        <a class="menu-link {{ Route::is('reporting.laporanPenjualan') ? 'active' : '' }}"
+                                            href="{{ route('reporting.laporanPenjualan') }}"><span
+                                                class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
-                                            <span class="menu-title">Laporan Pemasukan</span>
+                                            <span class="menu-title">Laporan Penjualan</span>
                                         </a>
                                     </div>
-                                    <div class="menu-item">
-                                        {{-- <a class="menu-link {{ Route::is('products.category') ? 'active' : '' }}" href="{{route('products.category')}}"> --}}
+                                    {{-- <div class="menu-item">
                                         <a class="menu-link" href="#">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
                                             <span class="menu-title">Laporan Pengeluaran</span>
                                         </a>
-                                    </div>
+                                    </div> --}}
                                     <div class="menu-item">
-                                        {{-- <a class="menu-link {{ Route::is('products.category') ? 'active' : '' }}" href="{{route('products.category')}}"> --}}
-                                        <a class="menu-link" href="#">
-                                            <span class="menu-bullet">
+                                        <a class="menu-link {{ Route::is('reporting.laporanTransaksiStock') ? 'active' : '' }}"
+                                            href="{{ route('reporting.laporanTransaksiStock') }}"><span
+                                                class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
                                             <span class="menu-title">Laporan Transaksi Stock</span>
@@ -361,7 +359,7 @@
                                 </div>
                             </div>
 
-                            <div data-kt-menu-trigger="click" data-kt-menu-placement="right-start"
+                            {{-- <div data-kt-menu-trigger="click" data-kt-menu-placement="right-start"
                                 class="menu-item py-3">
                                 <span class="menu-link" title="User Management" data-bs-toggle="tooltip"
                                     data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
@@ -392,7 +390,6 @@
                                         </div>
                                     </div>
                                     <div class="menu-item">
-                                        {{-- <a class="menu-link {{ Route::is('product.index') ? 'active' : '' }}" href="{{route('laporan.pemasukan')}}"> --}}
                                         <a class="menu-link" href="#">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
@@ -401,7 +398,6 @@
                                         </a>
                                     </div>
                                     <div class="menu-item">
-                                        {{-- <a class="menu-link {{ Route::is('products.category') ? 'active' : '' }}" href="{{route('products.category')}}"> --}}
                                         <a class="menu-link" href="#">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
@@ -410,7 +406,6 @@
                                         </a>
                                     </div>
                                     <div class="menu-item">
-                                        {{-- <a class="menu-link {{ Route::is('products.category') ? 'active' : '' }}" href="{{route('products.category')}}"> --}}
                                         <a class="menu-link" href="#">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
@@ -419,7 +414,7 @@
                                         </a>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                     <!--end::Aside menu-->

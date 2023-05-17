@@ -178,7 +178,16 @@ class ItemController extends Controller
 
         $item = Item::where('id', '=', $id)->get()[0];
 
-        return view('item.show', compact('breadcumb', 'item'));
+        $itemStocks = DB::select('SELECT item_stocks.batch_stock AS BATCH_CODE, transaction_types.name AS TRX_TYPE, item_histories.description, item_histories.qty, item_histories.qty_current, item_histories.qty_change FROM item_histories
+        JOIN item_stocks ON item_histories.item_stock_id = item_stocks.id
+        JOIN items ON item_stocks.item_id = items.id
+        JOIN transaction_types ON item_histories.transaction_type_id = transaction_types.id
+        WHERE items.id = ' . $id . '
+        ORDER BY item_histories.id;');
+
+        // dd($itemStocks);
+
+        return view('item.show', compact('breadcumb', 'item', 'itemStocks'));
     }
 
     /**
@@ -259,14 +268,18 @@ class ItemController extends Controller
                     ItemHistory::create([
                         'item_stock_id' => $itemStock->id,
                         'transaction_type_id' => 1,
-                        'qty' => $request->qtyStock,
+                        'qty' => $request->jumlahStock,
                         'qty_current' => 0,
-                        'qty_change' => $request->qtyStock,
-                        'description' => "Tambah item baru",
+                        'qty_change' => $request->jumlahStock,
+                        'description' => "Penambahan stock dari batch baru",
                         'created_by' => Auth::id()
                     ]);
                 }
             } else {
+
+                // TODO masukin ke item history nya belum
+                // panggil dulu data stock nya, apakah stock berubah atau tidak, kalo rubah baru insert ke item history
+
                 $data = [
                     // 'qty' => (($itemQty->find($request->qtyId)->qty) + ($request->jumlahStock)),
                     'qty' => $request->jumlahStock,
