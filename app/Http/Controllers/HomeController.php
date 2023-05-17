@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TransactionHistory;
+use App\Models\TransactionItem;
+use DB;
+
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -24,6 +28,27 @@ class HomeController extends Controller
     public function index()
     {
         $breadcumb = "Dashboard";
-        return view('home', compact('breadcumb'));
+
+        $dataTransaksiBulanIni = DB::select("
+            SELECT SUM(transaction_items.qty * transaction_items.selling_price) AS TOTAL_PENJUALAN, SUM(transaction_items.qty * item_prices.current_price) AS TOTAL_MODAL_PENJUALAN, (SUM(transaction_items.qty * transaction_items.selling_price) - SUM(transaction_items.qty * item_prices.current_price)) AS TOTAL_MARGIN 
+            FROM transaction_items
+            JOIN items ON transaction_items.item_id = items.id
+            JOIN item_stocks ON items.id = item_stocks.item_id
+            JOIN item_prices ON item_stocks.item_price_id = item_prices.id
+            WHERE item_stocks.batch_stock = transaction_items.batch_id
+            AND MONTH(transaction_items.created_at) = '" . date('m') . "'
+        ");
+
+        $dataTransaksiHariIni = DB::select("
+            SELECT SUM(transaction_items.qty * transaction_items.selling_price) AS TOTAL_PENJUALAN, SUM(transaction_items.qty * item_prices.current_price) AS TOTAL_MODAL_PENJUALAN, (SUM(transaction_items.qty * transaction_items.selling_price) - SUM(transaction_items.qty * item_prices.current_price)) AS TOTAL_MARGIN 
+            FROM transaction_items
+            JOIN items ON transaction_items.item_id = items.id
+            JOIN item_stocks ON items.id = item_stocks.item_id
+            JOIN item_prices ON item_stocks.item_price_id = item_prices.id
+            WHERE item_stocks.batch_stock = transaction_items.batch_id
+            AND DATE(transaction_items.created_at) = '" . date('Y-m-d') . "'
+        ");
+
+        return view('home', compact('breadcumb', 'dataTransaksiBulanIni', 'dataTransaksiHariIni'));
     }
 }

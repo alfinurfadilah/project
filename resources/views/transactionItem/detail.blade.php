@@ -23,7 +23,7 @@
                                     <h3 class="fs-3 text-gray-600">#INV-00{{ $transactionHistory->transaction_id }}</h3>
                                 </div>
                                 <div class="p-2 bd-highlight">
-                                    <h3 class="fs-3 text-gray-600">Alamat Toko</h3>
+                                    {{-- <h3 class="fs-3 text-gray-600">Alamat Toko</h3> --}}
                                 </div>
                             </div>
                             <div class="row">
@@ -42,19 +42,36 @@
                                                 <tr>
                                                     <td>{{ $dataTransactionItem->item->name }}</td>
                                                     <td class="text-center">
-                                                        {{ $dataTransactionItem->qty }}
+                                                        {{ number_format($dataTransactionItem->qty) }}
                                                     </td>
                                                     <td class="text-center">
-                                                        {{ $dataTransactionItem->item->itemStock[0]->itemPrice->price }}
+                                                        Rp.
+                                                        {{ number_format($dataTransactionItem->item->itemStock[0]->itemPrice->price) }}
                                                     </td>
                                                     <td class="text-center">
-                                                        {{ $dataTransactionItem->item->itemStock[0]->itemPrice->price * $dataTransactionItem->qty }}
+                                                        Rp.
+                                                        {{ number_format($dataTransactionItem->item->itemStock[0]->itemPrice->price * $dataTransactionItem->qty) }}
                                                     </td>
                                                 </tr>
                                             @endforeach
                                             <tr>
-                                                <td colspan="3" class="text-center fw-bolder">Sub Total</td>
-                                                <td class="text-center">{{ $transactionHistory->total }}</td>
+                                                <td colspan="" class="text-center fw-bolder">
+                                                    <div class="row">
+                                                        <div class="col text-start">Sub Total :</div>
+                                                        <div class="col text-end">Rp.
+                                                            {{ number_format($transactionHistory->sub_total) }}</div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col text-start">Diskon :</div>
+                                                        <div class="col text-end">(-) Rp.
+                                                            {{ number_format($transactionHistory->discount_user) }}</div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col text-start">PPN :</div>
+                                                        <div class="col text-end">Rp.
+                                                            {{ number_format($transactionHistory->tax) }}</div>
+                                                    </div>
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -73,12 +90,12 @@
                                     <div class="col text-end border-bottom py-5">
                                         <label class="fs-5 text-muted">Nomor Invoice</label>
                                         <br>
-                                        <label class="fs-5">{{ $transactionHistory->invoices_number }}</label>
+                                        <label class="fs-5">#INV-00{{ $transactionHistory->transaction_id }}</label>
                                     </div>
                                     <div class="col text-end border-bottom py-5">
                                         <label class="fs-5 text-muted">Tanggal</label>
                                         <br>
-                                        <label class="fs-5">{{ $transactionHistory->transaction_date }}</label>
+                                        <label class="fs-5">{{ $transactionHistory->created_at }}</label>
                                     </div>
                                 </div>
                             </div>

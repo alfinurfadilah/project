@@ -5,7 +5,7 @@
     <div class="card mt-5" style="min-height: 85vh">
         <div class="card-header bg-white">
             <div class="card-title">
-                <h4 class="font-weight-bold">Riwayat Penjualan</h4>
+                <h4 class="font-weight-bold">Riwayat Transaksi</h4>
             </div>
         </div>
         <div class="card-body">
