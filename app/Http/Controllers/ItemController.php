@@ -225,6 +225,7 @@ class ItemController extends Controller
 
         try {
 
+            // apabila batch baru
             if (!$request->stockId && !$request->qtyId && !$request->priceId) {
                 $itemQtyId = [];
                 $itemPriceId = [];
@@ -276,17 +277,28 @@ class ItemController extends Controller
                     ]);
                 }
             } else {
+                // batch yang sudah ada di edit
 
-                // TODO masukin ke item history nya belum
-                // panggil dulu data stock nya, apakah stock berubah atau tidak, kalo rubah baru insert ke item history
+                $currentQty = $itemQty->find($request->qtyId)->qty;
 
-                $data = [
-                    // 'qty' => (($itemQty->find($request->qtyId)->qty) + ($request->jumlahStock)),
-                    'qty' => $request->jumlahStock,
-                    'qty_change' => $request->jumlahStock
-                ];
+                if ($request->jumlahStock != $currentQty) {
+                    $data = [
+                        'qty' => $request->jumlahStock,
+                        'qty_change' => $request->jumlahStock
+                    ];
 
-                $itemQty->find($request->qtyId)->update($data);
+                    $itemQty->find($request->qtyId)->update($data);
+
+                    ItemHistory::create([
+                        'item_stock_id' => $request->stockId,
+                        'transaction_type_id' => 1,
+                        'qty' => $request->jumlahStock,
+                        'qty_current' => 0,
+                        'qty_change' => $request->jumlahStock,
+                        'description' => "Penambahan/Perubahan stock dari pengaturan batch",
+                        'created_by' => Auth::id()
+                    ]);
+                }
 
                 $data = [
                     'current_price' => $request->hargaModal,

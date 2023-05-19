@@ -64,7 +64,7 @@ class ReportingController extends Controller
         JOIN item_stocks ON item_histories.item_stock_id = item_stocks.id
         JOIN items ON item_stocks.item_id = items.id
         JOIN transaction_types ON item_histories.transaction_type_id = transaction_types.id
-        ORDER BY item_histories.id');
+        ORDER BY item_histories.id DESC');
 
         return view('reporting.laporanTransaksiStock', compact('breadcumb', 'totalStockMasuk', 'totalStockKeluar', 'listTransaksiStock'));
     }
