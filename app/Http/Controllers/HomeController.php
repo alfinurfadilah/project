@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TransactionHistory;
-use App\Models\TransactionItem;
+use App\Models\ItemHistory;
 use DB;
+use Carbon\Carbon;
 
 use Illuminate\Http\Request;
 
@@ -49,6 +49,9 @@ class HomeController extends Controller
             AND DATE(transaction_items.created_at) = '" . date('Y-m-d') . "'
         ");
 
-        return view('home', compact('breadcumb', 'dataTransaksiBulanIni', 'dataTransaksiHariIni'));
+
+        $totalStockKeluar = ItemHistory::where('transaction_type_id', 2)->whereDate('created_at', Carbon::today())->sum('qty');
+
+        return view('home', compact('breadcumb', 'dataTransaksiBulanIni', 'dataTransaksiHariIni', 'totalStockKeluar'));
     }
 }

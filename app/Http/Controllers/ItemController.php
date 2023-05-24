@@ -150,9 +150,9 @@ class ItemController extends Controller
                 ItemHistory::create([
                     'item_stock_id' => $itemStock->id,
                     'transaction_type_id' => 1,
-                    'qty' => $request->qtyStock[$i],
-                    'qty_current' => 0,
-                    'qty_change' => $request->qtyStock[$i],
+                    'qty' => 0, // stock awal
+                    'qty_change' => $request->qtyStock[$i], // stock in/out
+                    'qty_current' => $request->qtyStock[$i], // stock sekarang
                     'description' => "Tambah item baru",
                     'created_by' => Auth::id()
                 ]);
@@ -178,7 +178,7 @@ class ItemController extends Controller
 
         $item = Item::where('id', '=', $id)->get()[0];
 
-        $itemStocks = DB::select('SELECT item_stocks.batch_stock AS BATCH_CODE, transaction_types.name AS TRX_TYPE, item_histories.description, item_histories.qty, item_histories.qty_current, item_histories.qty_change FROM item_histories
+        $itemStocks = DB::select('SELECT item_histories.created_at AS TGL_TRX, item_stocks.batch_stock AS BATCH_CODE, transaction_types.name AS TRX_TYPE, item_histories.description, item_histories.qty, item_histories.qty_current, item_histories.qty_change FROM item_histories
         JOIN item_stocks ON item_histories.item_stock_id = item_stocks.id
         JOIN items ON item_stocks.item_id = items.id
         JOIN transaction_types ON item_histories.transaction_type_id = transaction_types.id
@@ -269,9 +269,11 @@ class ItemController extends Controller
                     ItemHistory::create([
                         'item_stock_id' => $itemStock->id,
                         'transaction_type_id' => 1,
-                        'qty' => $request->jumlahStock,
-                        'qty_current' => 0,
-                        'qty_change' => $request->jumlahStock,
+
+                        'qty' => 0, // stock awal
+                        'qty_change' => $request->jumlahStock, // stock in/out
+                        'qty_current' => $request->jumlahStock, // stock sekarang
+
                         'description' => "Penambahan stock dari batch baru",
                         'created_by' => Auth::id()
                     ]);
@@ -292,9 +294,11 @@ class ItemController extends Controller
                     ItemHistory::create([
                         'item_stock_id' => $request->stockId,
                         'transaction_type_id' => 1,
-                        'qty' => $request->jumlahStock,
-                        'qty_current' => 0,
-                        'qty_change' => $request->jumlahStock,
+
+                        'qty' => $currentQty, // stock awal
+                        'qty_change' => $request->jumlahStock, // stock in/out
+                        'qty_current' => $request->jumlahStock, // stock sekarang
+
                         'description' => "Penambahan/Perubahan stock dari pengaturan batch",
                         'created_by' => Auth::id()
                     ]);
@@ -346,6 +350,18 @@ class ItemController extends Controller
         $uom = Uom::get();
 
         return view('item.edit', compact('breadcumb', 'item', 'itemCategories', 'itemType', 'uom'));
+    }
+
+    public function getItemTypes($idCategory)
+    {
+        if ($idCategory) {
+            $itemTypes = ItemType::where('item_category_id', $idCategory)->get();
+            $sen['success'] = true;
+            $sen['message'] = "Berhasil menambahkan diskon";
+            $sen['data'] = $itemTypes;
+        }
+
+        return response()->json(['data' => $sen]);
     }
 
     /**

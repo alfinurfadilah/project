@@ -35,6 +35,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/item/show/{id}', [App\Http\Controllers\ItemController::class, 'show'])->name('item.show');
     Route::get('/item/showAturStock/{id}', [App\Http\Controllers\ItemController::class, 'showAturStock'])->name('item.showAturStock');
     Route::post('/item/updateStock', [App\Http\Controllers\ItemController::class, 'updateStock'])->name('item.updateStock');
+    Route::get('/item/getItemTypes/{id}', [App\Http\Controllers\ItemController::class, 'getItemTypes'])->name('item.getItemTypes');
 
     Route::get('/itemHistory', [App\Http\Controllers\ItemHistoryController::class, 'index'])->name('itemHistory.index');
     Route::get('/itemHistory/show/{id}', [App\Http\Controllers\ItemHistoryController::class, 'show'])->name('itemHistory.show');

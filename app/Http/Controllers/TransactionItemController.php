@@ -422,13 +422,19 @@ class TransactionItemController extends Controller
                             'qty' => $totalStockBerkurang,
                             'qty_change' => $totalStockBerkurang
                         ])) {
+                            $getItemStock = ItemStock::find($row->id);
+
+                            $itemStockCurrentQty = $getItemStock->itemQty->qty;
+
                             // 4. baru tambahkan di item_history
                             ItemHistory::create([
                                 'item_stock_id' => $itemStock->id,
                                 'transaction_type_id' => 2,
-                                'qty' => $row->quantity,
-                                'qty_current' => $itemStock->itemQty->qty,
-                                'qty_change' => $row->quantity,
+
+                                'qty' => $itemStockQty, // stock awal
+                                'qty_change' => $row->quantity, // stock in/out
+                                'qty_current' => $itemStockCurrentQty, // stock sekarang
+
                                 'description' => "Pengurangan stock dari transaksi",
                                 'created_by' => Auth::id()
                             ]);

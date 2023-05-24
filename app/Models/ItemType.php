@@ -12,6 +12,11 @@ class ItemType extends Model
     protected $table = 'item_types';
 
     protected $fillable = [
-        'name', 'description'
+        'item_category_id', 'name', 'description'
     ];
+
+    public function itemCategory()
+    {
+        return $this->belongsTo(ItemCategories::class, 'item_category_id');
+    }
 }

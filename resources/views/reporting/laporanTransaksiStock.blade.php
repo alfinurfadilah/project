@@ -70,25 +70,27 @@
                 <table class="table align-middle table-row-dashed fs-6 gy-5">
                     <thead>
                         <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
+                            <th>Tanggal Transaksi</th>
+                            <th>Batch</th>
                             <th>Nama Barang</th>
-                            <th>Batch ID</th>
+                            <th>Stock Awal</th>
+                            <th>IN/OUT</th>
+                            <th>Stok Sekarang</th>
                             <th>Tipe Transaksi</th>
                             <th>Deskripsi</th>
-                            <th>Kuantitas</th>
-                            <th>Stok Sekarang</th>
-                            <th>Perubahan Stok</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($listTransaksiStock as $itemStock)
                             <tr>
-                                <td>{{ $itemStock->name }}</td>
+                                <td>{{ $itemStock->TGL_TRX }}</td>
                                 <td>{{ $itemStock->BATCH_CODE }}</td>
+                                <td>{{ $itemStock->name }}</td>
+                                <td>{{ $itemStock->qty }}</td>
+                                <td>{{ $itemStock->qty_change }}</td>
+                                <td>{{ $itemStock->qty_current }}</td>
                                 <td>{{ $itemStock->TRX_TYPE }}</td>
                                 <td>{{ $itemStock->description }}</td>
-                                <td>{{ $itemStock->qty }}</td>
-                                <td>{{ $itemStock->qty_current }}</td>
-                                <td>{{ $itemStock->qty_change }}</td>
                             </tr>
                         @endforeach
                     </tbody>

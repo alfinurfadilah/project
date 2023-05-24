@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-    @section('content')
+@section('content')
     <div class="container-fluid">
         @if ($errors->any())
             @foreach ($errors->all() as $error)
-                @include('layouts.flash-error',[ 'message'=> $error ])
+                @include('layouts.flash-error', ['message' => $error])
             @endforeach
         @endif
-        
+
         <form action="{{ route('itemType.update') }}" method="POST" id="kt_create_pengeluaran">
             @csrf
             <input type="hidden" name="id" value="{{ $itemType->id }}">
@@ -18,8 +18,25 @@
                             <div class="row mb-5">
                                 <div class="col">
                                     <div class="form-group">
+                                        <label class="form-label required" for="kategori">Kategori</label>
+                                        <select class="form-select" aria-label="Select example" name="itemCategoryId">
+                                            <option>Pilih kategori</option>
+                                            @foreach ($itemCategory as $item)
+                                                <option value="{{ $item->id }}"
+                                                    {{ $itemType->item_category_id == $item->id ? 'selected' : '' }}>
+                                                    {{ $item->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="col">
+                                    <div class="form-group">
                                         <label class="form-label required" for="jumlahStock">Nama Satuan</label>
-                                        <input type="text" class="form-control form-control-solid" name="itemTypeName" value="{{ old('namaUom', $itemType->item_type_name) }}" min="0">
+                                        <input type="text" class="form-control form-control-solid" name="itemTypeName"
+                                            value="{{ old('namaUom', $itemType->name) }}" min="0">
                                         @include('layouts.error', ['name' => 'itemTypeName'])
                                     </div>
                                 </div>
@@ -44,27 +61,24 @@
         </form>
 
     </div>
-    @endsection
-    
-    @section('onpage-js')
+@endsection
 
+@section('onpage-js')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
-    @if(Session::has('errorTransaksi'))
-    <script>
-        toastr.error(
-            'Data tidak valid'
-        )
-
-    </script>
+    @if (Session::has('errorTransaksi'))
+        <script>
+            toastr.error(
+                'Data tidak valid'
+            )
+        </script>
     @endif
 
-    @if(Session::has('success'))
-    <script>
-        toastr.success(
-            'Data berhasil di perbaharui'
-        )
-
-    </script>
+    @if (Session::has('success'))
+        <script>
+            toastr.success(
+                'Data berhasil di perbaharui'
+            )
+        </script>
     @endif
-    @endsection
+@endsection

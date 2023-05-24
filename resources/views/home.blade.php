@@ -59,8 +59,9 @@
                     <div class="shadow-sm p-3 bg-white rounded">
                         <div class="d-flex align-items-center flex-row-fluid flex-wrap">
                             <div class="flex-grow-1 me-2 p-5">
-                                <span class="fw-bold d-block fs-5">Total Pengeluaran</span>
-                                <a href="#" class="text-gray-800 text-hover-primary fs-2 fw-bolder">Rp. 0</a>
+                                <span class="fw-bold d-block fs-5">Produk terjual hari ini</span>
+                                <a href="#" class="text-gray-800 text-hover-primary fs-2 fw-bolder">
+                                    {{ number_format($totalStockKeluar) }}</a>
                             </div>
                         </div>
                     </div>

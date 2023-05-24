@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('item_types', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->integer('item_category_id');
             $table->text('description')->nullable();
             $table->softDeletes();
             $table->timestamps();

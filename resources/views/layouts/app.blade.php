@@ -170,7 +170,7 @@
                                             <span class="menu-title">Customer</span>
                                         </a>
                                     </div>
-                                    <div class="menu-item">
+                                    {{-- <div class="menu-item">
                                         <a class="menu-link {{ Route::is('supplier.index') ? 'active' : '' }}"
                                             href="{{ route('supplier.index') }}">
                                             <span class="menu-bullet">
@@ -178,7 +178,7 @@
                                             </span>
                                             <span class="menu-title">Supplier</span>
                                         </a>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
 
@@ -232,7 +232,7 @@
                                             <span class="menu-title">Stock Items</span>
                                         </a>
                                     </div>
-                                    <div class="menu-item">
+                                    {{-- <div class="menu-item">
                                         <a class="menu-link {{ Route::is('itemHistory.index') ? 'active' : '' }}"
                                             href="{{ route('itemHistory.index') }}">
                                             <span class="menu-bullet">
@@ -240,7 +240,7 @@
                                             </span>
                                             <span class="menu-title">History Stock Items</span>
                                         </a>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
 

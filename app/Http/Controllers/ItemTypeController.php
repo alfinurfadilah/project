@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ItemType;
 use App\Http\Controllers\Controller;
+use App\Models\ItemCategories;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB;
@@ -20,12 +21,12 @@ class ItemTypeController extends Controller
         //
         $breadcumb = "Jenis Barang";
 
-        $itemTypes = ItemType::when(request('search'), function($query){
-            return $query->where('name','like','%'.request('search').'%');
+        $itemTypes = ItemType::when(request('search'), function ($query) {
+            return $query->where('name', 'like', '%' . request('search') . '%');
         })
-        ->orderBy('created_at','desc')
-        ->paginate(10);
-        
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
         return view('itemType.index', compact('breadcumb', 'itemTypes'));
     }
 
@@ -38,8 +39,10 @@ class ItemTypeController extends Controller
     {
         //
         $breadcumb = "Form Tambah Jenis Barang";
-        
-        return view('itemType.create', compact('breadcumb'));
+
+        $itemCategory = ItemCategories::get();
+
+        return view('itemType.create', compact('breadcumb', 'itemCategory'));
     }
 
     /**
@@ -53,29 +56,29 @@ class ItemTypeController extends Controller
         // dd($request->all());
 
         $this->validate($request, [
+            'itemCategoryId' => 'required',
             'itemTypeName' => 'required'
         ]);
 
         DB::beginTransaction();
 
-        try{
+        try {
 
             ITemType::create([
+                'item_category_id' => $request->itemCategoryId,
                 'name' => $request->itemTypeName,
-                'description' => $request->description, 
+                'description' => $request->description,
             ]);
 
-            DB::commit();   
-            return redirect()->route('itemType.index')->with('success','Data berhasil disimpan');
-
-        } catch(\Exeception $e) {
+            DB::commit();
+            return redirect()->route('itemType.index')->with('success', 'Data berhasil disimpan');
+        } catch (\Exeception $e) {
 
             DB::rollback();
-            return redirect()->back()->with('errorTransaksi','Data gagal disimpan');    
-                
+            return redirect()->back()->with('errorTransaksi', 'Data gagal disimpan');
         }
 
-        return redirect()->back()->with('errorTransaksi','Data gagal disimpan');
+        return redirect()->back()->with('errorTransaksi', 'Data gagal disimpan');
     }
 
     /**
@@ -101,8 +104,9 @@ class ItemTypeController extends Controller
         $breadcumb = "Edit Kategori";
 
         $itemType = $itemType->find($id);
-                    
-        return view('itemType.edit', compact('breadcumb', 'itemType'));
+        $itemCategory = ItemCategories::get();
+
+        return view('itemType.edit', compact('breadcumb', 'itemType', 'itemCategory'));
     }
 
     /**
@@ -117,31 +121,31 @@ class ItemTypeController extends Controller
         // dd($request->all());
 
         $this->validate($request, [
+            'itemCategoryId' => 'required',
             'itemTypeName' => 'required'
         ]);
 
         DB::beginTransaction();
 
-        try{
+        try {
 
             $data = [
+                'item_category_id' => $request->itemCategoryId,
                 'name' => $request->itemTypeName,
                 'description' => $request->description
             ];
 
             $itemType->find($request->id)->update($data);
 
-            DB::commit();   
-            return redirect()->back()->with('success','Data Berhasil Disimpan'); 
-
-        } catch(\Exeception $e) {
+            DB::commit();
+            return redirect()->back()->with('success', 'Data Berhasil Disimpan');
+        } catch (\Exeception $e) {
 
             DB::rollback();
-            return redirect()->back()->with('error','Data gagal disimpan');    
-                
+            return redirect()->back()->with('error', 'Data gagal disimpan');
         }
 
-        return redirect()->back()->with('error','Data gagal disimpan');
+        return redirect()->back()->with('error', 'Data gagal disimpan');
     }
 
     /**
@@ -154,15 +158,14 @@ class ItemTypeController extends Controller
     {
         DB::beginTransaction();
 
-        try{
-            $itemType->find($id)->delete();     
+        try {
+            $itemType->find($id)->delete();
 
             DB::commit();
-            return redirect()->route('itemType.index')->with('success','Kagegori berhasil dihapus');                             
-        }
-        catch(\Exeception $e){
-            DB::rollback();      
-            return redirect()->route('itemType.index')->with('error',$e);      
+            return redirect()->route('itemType.index')->with('success', 'Kagegori berhasil dihapus');
+        } catch (\Exeception $e) {
+            DB::rollback();
+            return redirect()->route('itemType.index')->with('error', $e);
         }
     }
 }
