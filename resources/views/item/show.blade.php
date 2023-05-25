@@ -221,7 +221,7 @@
                                 <td>{{ $itemStock->TGL_TRX }}</td>
                                 <td>{{ $itemStock->BATCH_CODE }}</td>
                                 <td>{{ $itemStock->qty }}</td>
-                                <td>{{ $itemStock->qty_change }}</td>
+                                <td>{{ $itemStock->TRX_TYPE_ID == 2 ? '(-)' : '(+)' }} {{ $itemStock->qty_change }}</td>
                                 <td>{{ $itemStock->qty_current }}</td>
                                 <td>{{ $itemStock->TRX_TYPE }}</td>
                                 <td>{{ $itemStock->description }}</td>

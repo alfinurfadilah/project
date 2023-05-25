@@ -50,7 +50,7 @@ class HomeController extends Controller
         ");
 
 
-        $totalStockKeluar = ItemHistory::where('transaction_type_id', 2)->whereDate('created_at', Carbon::today())->sum('qty');
+        $totalStockKeluar = ItemHistory::where('transaction_type_id', 2)->whereDate('created_at', Carbon::today())->sum('qty_change');
 
         return view('home', compact('breadcumb', 'dataTransaksiBulanIni', 'dataTransaksiHariIni', 'totalStockKeluar'));
     }

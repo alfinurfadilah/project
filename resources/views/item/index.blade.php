@@ -197,7 +197,7 @@
                 </div>
             </div>
             <!--end::Row-->
-            <div>{{ $items->links() }}</div>
+            <div>{{ $items->links('pagination::bootstrap-4') }}</div>
         </div>
         <!--end::Card body-->
     </div>

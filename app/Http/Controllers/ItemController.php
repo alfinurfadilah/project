@@ -178,14 +178,13 @@ class ItemController extends Controller
 
         $item = Item::where('id', '=', $id)->get()[0];
 
-        $itemStocks = DB::select('SELECT item_histories.created_at AS TGL_TRX, item_stocks.batch_stock AS BATCH_CODE, transaction_types.name AS TRX_TYPE, item_histories.description, item_histories.qty, item_histories.qty_current, item_histories.qty_change FROM item_histories
+        $itemStocks = DB::select('SELECT item_histories.created_at AS TGL_TRX, item_stocks.batch_stock AS BATCH_CODE, transaction_types.name AS TRX_TYPE, item_histories.description, item_histories.qty, item_histories.qty_current, item_histories.qty_change, item_histories.transaction_type_id AS TRX_TYPE_ID
+        FROM item_histories
         JOIN item_stocks ON item_histories.item_stock_id = item_stocks.id
         JOIN items ON item_stocks.item_id = items.id
         JOIN transaction_types ON item_histories.transaction_type_id = transaction_types.id
         WHERE items.id = ' . $id . '
-        ORDER BY item_histories.id;');
-
-        // dd($itemStocks);
+        ORDER BY item_histories.id DESC;');
 
         return view('item.show', compact('breadcumb', 'item', 'itemStocks'));
     }

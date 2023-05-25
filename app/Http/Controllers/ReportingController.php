@@ -57,10 +57,12 @@ class ReportingController extends Controller
     {
         $breadcumb = "Laporan Transaksi Stock";
 
-        $totalStockMasuk = ItemHistory::where('transaction_type_id', 1)->sum('qty');
-        $totalStockKeluar = ItemHistory::where('transaction_type_id', 2)->sum('qty');
+        $totalStockMasuk = ItemHistory::where('transaction_type_id', 1)->sum('qty_change');
+        $totalStockKeluar = ItemHistory::where('transaction_type_id', 2)->sum('qty_change');
 
-        $listTransaksiStock = DB::select('SELECT item_histories.created_at AS TGL_TRX, items.name, item_stocks.batch_stock AS BATCH_CODE, transaction_types.name AS TRX_TYPE, item_histories.description, item_histories.qty, item_histories.qty_current, item_histories.qty_change FROM item_histories
+        $listTransaksiStock = DB::select('SELECT item_histories.created_at AS TGL_TRX, items.name, item_stocks.batch_stock AS BATCH_CODE, transaction_types.name AS TRX_TYPE, item_histories.description, item_histories.qty, item_histories.qty_current, item_histories.qty_change,
+        item_histories.transaction_type_id AS TRX_TYPE_ID
+        FROM item_histories
         JOIN item_stocks ON item_histories.item_stock_id = item_stocks.id
         JOIN items ON item_stocks.item_id = items.id
         JOIN transaction_types ON item_histories.transaction_type_id = transaction_types.id
