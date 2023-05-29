@@ -71,11 +71,25 @@ class ItemTypeController extends Controller
             ]);
 
             DB::commit();
-            return redirect()->route('itemType.index')->with('success', 'Data berhasil disimpan');
+            if (request()->ajax()) {
+                return response()->json(['data' => [
+                    'success' => true,
+                    'message' => "Berhasil tambah jenis kategori",
+                ]]);
+            } else {
+                return redirect()->route('itemType.index')->with('success', 'Data berhasil disimpan');
+            }
         } catch (\Exeception $e) {
 
             DB::rollback();
-            return redirect()->back()->with('errorTransaksi', 'Data gagal disimpan');
+            if (request()->ajax()) {
+                return response()->json(['data' => [
+                    'success' => false,
+                    'message' => "Gagal tambah kategori",
+                ]]);
+            } else {
+                return redirect()->back()->with('errorTransaksi', 'Data gagal disimpan');
+            }
         }
 
         return redirect()->back()->with('errorTransaksi', 'Data gagal disimpan');

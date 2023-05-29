@@ -150,20 +150,31 @@
 
                                     <div class="col">
                                         <div class="fv-row mb-10">
-                                            <div class="col">
-                                                <div class="form-group">
-                                                    <label class="form-label" for="kategoriBarang">Kategori Barang</label>
-                                                    <select name="itemCategoryId" aria-label="Pilih Kategori"
-                                                        data-control="select2" data-placeholder="Pilih Kategori..."
-                                                        data-dropdown-parent="#kt_create_product_form"
-                                                        class="form-control form-select form-select-solid fw-bolder"
-                                                        onchange="getItemTypes(this.value)">
-                                                        <option value="">Pilih Kategori...</option>
-                                                        @foreach ($itemCategories as $index => $value)
-                                                            <option value="{{ $value->id }}">{{ $value->name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    @include('layouts.error', ['name' => 'itemCategoryId'])
+                                            <div class="row align-items-end">
+                                                <div class="col-10">
+                                                    <div class="form-group">
+                                                        <label class="form-label" for="kategoriBarang">Kategori
+                                                            Barang</label>
+                                                        <select name="itemCategoryId" aria-label="Pilih Kategori"
+                                                            data-control="select2" data-placeholder="Pilih Kategori..."
+                                                            data-dropdown-parent="#kt_create_product_form"
+                                                            class="form-control form-select form-select-solid fw-bolder"
+                                                            onchange="getItemTypes(this.value)" id="selectCategory">
+                                                            <option value="">Pilih Kategori...</option>
+                                                            @foreach ($itemCategories as $index => $value)
+                                                                <option value="{{ $value->id }}">{{ $value->name }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                        @include('layouts.error', [
+                                                            'name' => 'itemCategoryId',
+                                                        ])
+                                                    </div>
+                                                </div>
+                                                <div class="col-2">
+                                                    <button type="button" class="btn btn-lg btn-primary"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#kt_modal_tambah_kategori">+</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -174,16 +185,25 @@
                                 <div class="row">
                                     <div class="col">
                                         <div class="fv-row mb-10">
-                                            <div class="col">
-                                                <div class="form-group">
-                                                    <label class="form-label" for="jenisBarang">Jenis Barang</label>
-                                                    <select name="itemTypeId" aria-label="Pilih Jenis Barang"
-                                                        data-control="select2" data-placeholder="Pilih Jenis Barang..."
-                                                        data-dropdown-parent="#kt_create_product_form"
-                                                        class="form-control form-select form-select-solid fw-bolder"
-                                                        disabled id="selectItemTypeId">
-                                                    </select>
-                                                    @include('layouts.error', ['name' => 'itemTypeId'])
+                                            <div class="row align-items-end">
+                                                <div class="col-9">
+                                                    <div class="form-group">
+                                                        <label class="form-label" for="jenisBarang">Jenis Barang</label>
+                                                        <select name="itemTypeId" aria-label="Pilih Jenis Barang"
+                                                            data-control="select2"
+                                                            data-placeholder="Pilih Jenis Barang..."
+                                                            data-dropdown-parent="#kt_create_product_form"
+                                                            class="form-control form-select form-select-solid fw-bolder"
+                                                            disabled id="selectItemTypeId">
+                                                        </select>
+                                                        @include('layouts.error', ['name' => 'itemTypeId'])
+                                                    </div>
+                                                </div>
+                                                <div class="col-2">
+                                                    <button type="button" class="btn btn-lg btn-primary"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#kt_modal_tambah_jenis_barang" disabled
+                                                        id="btnModalTambahJenisBarang">+</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -206,10 +226,12 @@
                                 </div>
 
                                 <div class="fv-row mb-10">
-                                    <div class="form-group">
-                                        <label class="form-label" for="description">Deskripsi</label>
-                                        <textarea name="description" cols="30" rows="10" class="form-control form-control-solid">{{ old('description') }}</textarea>
-                                        @include('layouts.error', ['name' => 'description'])
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label class="form-label" for="description">Deskripsi</label>
+                                            <textarea name="description" cols="30" rows="10" class="form-control form-control-solid">{{ old('description') }}</textarea>
+                                            @include('layouts.error', ['name' => 'description'])
+                                        </div>
                                     </div>
                                 </div>
                                 <!--end::Input group-->
@@ -478,6 +500,127 @@
         </div>
         <!--end::Post-->
 
+        <div class="modal fade" tabindex="-1" id="kt_modal_tambah_kategori">
+            <div class="modal-dialog">
+                <div class="modal-content" id="divModalTambahKategoriBarang">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Tambah Kategori Barang</h5>
+                        <!--begin::Close-->
+                        <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
+                            aria-label="Close">
+                            <span class="svg-icon svg-icon-2x"></span>
+                        </div>
+                        <!--end::Close-->
+                    </div>
+
+                    <div class="modal-body">
+                        <form action="{{ route('itemCategory.store') }}" method="POST" id="formTambahKategoriBarang">
+                            @csrf
+                            <div class="row mb-5">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label class="form-label required" for="jumlahStock">Nama Kategori</label>
+                                        <input type="text" class="form-control form-control-solid" name="name"
+                                            value="{{ old('name') }}">
+                                        @include('layouts.error', ['name' => 'name'])
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label class="form-label" for="description">Deskripsi</label>
+                                        <textarea name="description" cols="30" rows="10" class="form-control form-control-solid">{{ old('description') }}</textarea>
+                                        @include('layouts.error', ['name' => 'description'])
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="btnTambahKategori">Tambah Kategori</button>
+                    </div>
+
+                    <div class="overlay-layer card-rounded bg-dark bg-opacity-5" style="display: none;"
+                        id="overlayDivModalTambahKategoriBarang">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" tabindex="-1" id="kt_modal_tambah_jenis_barang">
+            <div class="modal-dialog">
+                <div class="modal-content" id="divModalTambahJenisBarang">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Tambah Jenis Barang</h5>
+
+                        <!--begin::Close-->
+                        <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
+                            aria-label="Close">
+                            <span class="svg-icon svg-icon-2x"></span>
+                        </div>
+                        <!--end::Close-->
+                    </div>
+
+                    <div class="modal-body">
+                        <form action="{{ route('itemType.store') }}" method="POST" id="formTambahJenisBarang">
+                            @csrf
+                            <div class="row mb-5">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label class="form-label required" for="kategori">Kategori</label>
+                                        <select class="form-select" aria-label="Select example" name="itemCategoryId"
+                                            id="selectItemCategoryId">
+                                            <option>Pilih kategori</option>
+                                            @foreach ($itemCategory as $item)
+                                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label class="form-label required" for="jumlahStock">Nama Jenis Barang</label>
+                                        <input type="text" class="form-control form-control-solid" name="itemTypeName"
+                                            value="{{ old('itemTypeName') }}">
+                                        @include('layouts.error', ['name' => 'itemTypeName'])
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label class="form-label" for="description">Deskripsi</label>
+                                        <textarea name="description" cols="30" rows="10" class="form-control form-control-solid">{{ old('description') }}</textarea>
+                                        @include('layouts.error', ['name' => 'description'])
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="btnTambahJenisBarang">Tambah Customer</button>
+                    </div>
+
+                    <div class="overlay-layer card-rounded bg-dark bg-opacity-5" style="display: none;"
+                        id="overlayDivModalTambahJenisBarang">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 @endsection
 
@@ -715,6 +858,43 @@
     </script>
 
     <script>
+        function getCategory() {
+            var divFormId = "divItem";
+            var overlayId = "overlayDivItem";
+            var route = '{{ route('item.getCategories') }}';
+
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: route,
+                type: "GET",
+                beforeSend: function() {
+                    $('#' + divFormId).addClass('overlay overlay-block');
+                    $("#" + overlayId).show();
+                },
+                success: function(response) {
+                    var dataItemTypes = response.data.data;
+
+                    console.log(dataItemTypes.length);
+
+                    $('#selectCategory').html("");
+
+                    var listOption = "<option></option>";
+
+                    dataItemTypes.forEach(element => {
+                        listOption += '<option value="' + element.id + '">' + element.name +
+                            '</option>';
+                    });
+
+                    $("#selectCategory").html(listOption);
+
+                    $('#' + divFormId).removeClass('overlay overlay-block');
+                    $("#" + overlayId).hide();
+                }
+            });
+        }
+
         function getItemTypes(idCategory) {
             var divFormId = "divItem";
             var overlayId = "overlayDivItem";
@@ -746,6 +926,7 @@
                     });
 
                     $("#selectItemTypeId").html(listOption);
+                    $("#btnModalTambahJenisBarang").prop("disabled", false);
                     $("#selectItemTypeId").prop("disabled", false);
 
                     $('#' + divFormId).removeClass('overlay overlay-block');
@@ -753,6 +934,56 @@
                 }
             });
         }
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $("#btnTambahKategori").click(function() {
+                var divFormId = "divModalTambahKategoriBarang";
+                var overlayId = "overlayDivModalTambahKategoriBarang";
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: $("#formTambahKategoriBarang").attr('action'),
+                    data: $("#formTambahKategoriBarang").serialize(),
+                    beforeSend: function() {
+                        $('#' + divFormId).addClass('overlay overlay-block');
+                        $("#" + overlayId).show();
+                    },
+                    success: function(response) {
+                        $('#kt_modal_tambah_kategori').modal('hide');
+                        getCategory();
+
+                        $('#' + divFormId).removeClass('overlay overlay-block');
+                        $("#" + overlayId).hide();
+                    }
+                });
+            });
+
+            $("#btnTambahJenisBarang").click(function() {
+                var divFormId = "divModalTambahJenisBarang";
+                var overlayId = "overlayDivModalTambahJenisBarang";
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: $("#formTambahJenisBarang").attr('action'),
+                    data: $("#formTambahJenisBarang").serialize(),
+                    beforeSend: function() {
+                        $('#' + divFormId).addClass('overlay overlay-block');
+                        $("#" + overlayId).show();
+                    },
+                    success: function(response) {
+                        $('#kt_modal_tambah_jenis_barang').modal('hide');
+
+                        // var itemCategoryId = $("#selectItemCategoryId").val();
+                        // getItemTypes(itemCategoryId);
+
+                        $('#' + divFormId).removeClass('overlay overlay-block');
+                        $("#" + overlayId).hide();
+                    }
+                });
+            });
+        });
     </script>
     <!--end::Other form event-->
 @endsection

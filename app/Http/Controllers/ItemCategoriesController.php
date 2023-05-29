@@ -22,12 +22,12 @@ class ItemCategoriesController extends Controller
         //
         $breadcumb = "Kategori";
 
-        $itemCategories = ItemCategories::when(request('search'), function($query){
-            return $query->where('name','like','%'.request('search').'%');
+        $itemCategories = ItemCategories::when(request('search'), function ($query) {
+            return $query->where('name', 'like', '%' . request('search') . '%');
         })
-        ->orderBy('created_at','desc')
-        ->paginate(10);
-        
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
         return view('itemCategory.index', compact('breadcumb', 'itemCategories'));
     }
 
@@ -40,7 +40,7 @@ class ItemCategoriesController extends Controller
     {
         //
         $breadcumb = "Form Tambah Kategori";
-        
+
         return view('itemCategory.create', compact('breadcumb'));
     }
 
@@ -60,25 +60,37 @@ class ItemCategoriesController extends Controller
 
         DB::beginTransaction();
 
-        try{
+        try {
 
             ItemCategories::create([
                 'name' => $request->name,
-                'description' => $request->description, 
+                'description' => $request->description,
                 'created_by' => Auth::id(),
             ]);
 
-            DB::commit();   
-            return redirect()->route('itemCategory.index')->with('success','Data berhasil disimpan');
-
-        } catch(\Exeception $e) {
+            DB::commit();
+            if (request()->ajax()) {
+                return response()->json(['data' => [
+                    'success' => true,
+                    'message' => "Berhasil tambah kategori",
+                ]]);
+            } else {
+                return redirect()->route('itemCategory.index')->with('success', 'Data berhasil disimpan');
+            }
+        } catch (\Exeception $e) {
 
             DB::rollback();
-            return redirect()->back()->with('errorTransaksi','Data gagal disimpan');    
-                
+            if (request()->ajax()) {
+                return response()->json(['data' => [
+                    'success' => false,
+                    'message' => "Gagal tambah kategori",
+                ]]);
+            } else {
+                return redirect()->back()->with('errorTransaksi', 'Data gagal disimpan');
+            }
         }
 
-        return redirect()->back()->with('errorTransaksi','Data gagal disimpan');
+        return redirect()->back()->with('errorTransaksi', 'Data gagal disimpan');
     }
 
     /**
@@ -104,7 +116,7 @@ class ItemCategoriesController extends Controller
         $breadcumb = "Edit Kategori";
 
         $itemCategory = $itemCategories->find($id);
-                    
+
         return view('itemCategory.edit', compact('breadcumb', 'itemCategory'));
     }
 
@@ -125,7 +137,7 @@ class ItemCategoriesController extends Controller
 
         DB::beginTransaction();
 
-        try{
+        try {
 
             $data = [
                 'name' => $request->name,
@@ -134,17 +146,15 @@ class ItemCategoriesController extends Controller
 
             $itemCategories->find($request->id)->update($data);
 
-            DB::commit();   
-            return redirect()->back()->with('success','Data Berhasil Disimpan'); 
-
-        } catch(\Exeception $e) {
+            DB::commit();
+            return redirect()->back()->with('success', 'Data Berhasil Disimpan');
+        } catch (\Exeception $e) {
 
             DB::rollback();
-            return redirect()->back()->with('error','Data gagal disimpan');    
-                
+            return redirect()->back()->with('error', 'Data gagal disimpan');
         }
 
-        return redirect()->back()->with('error','Data gagal disimpan'); 
+        return redirect()->back()->with('error', 'Data gagal disimpan');
     }
 
     /**
@@ -157,15 +167,14 @@ class ItemCategoriesController extends Controller
     {
         DB::beginTransaction();
 
-        try{
-            $itemCategories->find($id)->delete();     
+        try {
+            $itemCategories->find($id)->delete();
 
             DB::commit();
-            return redirect()->route('itemCategory.index')->with('success','Kagegori berhasil dihapus');                             
+            return redirect()->route('itemCategory.index')->with('success', 'Kagegori berhasil dihapus');
+        } catch (\Exeception $e) {
+            DB::rollback();
+            return redirect()->route('itemCategory.index')->with('error', $e);
         }
-        catch(\Exeception $e){
-            DB::rollback();      
-            return redirect()->route('itemCategory.index')->with('error', $e);      
-        }  
     }
 }

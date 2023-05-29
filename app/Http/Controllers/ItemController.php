@@ -54,8 +54,9 @@ class ItemController extends Controller
         $itemCategories = ItemCategories::get();
         $itemType = ItemType::get();
         $uom = Uom::get();
+        $itemCategory = ItemCategories::get();
 
-        return view('item.create', compact('breadcumb', 'itemCategories', 'itemType', 'uom'));
+        return view('item.create', compact('breadcumb', 'itemCategories', 'itemType', 'uom', 'itemCategory'));
     }
 
     /**
@@ -292,7 +293,7 @@ class ItemController extends Controller
 
                     ItemHistory::create([
                         'item_stock_id' => $request->stockId,
-                        'transaction_type_id' => 1,
+                        'transaction_type_id' => 3,
 
                         'qty' => $currentQty, // stock awal
                         'qty_change' => $request->jumlahStock, // stock in/out
@@ -351,12 +352,22 @@ class ItemController extends Controller
         return view('item.edit', compact('breadcumb', 'item', 'itemCategories', 'itemType', 'uom'));
     }
 
+    public function getCategories()
+    {
+        $itemCategories = ItemCategories::get();
+        $sen['success'] = true;
+        $sen['message'] = "Berhasil mengambil data";
+        $sen['data'] = $itemCategories;
+
+        return response()->json(['data' => $sen]);
+    }
+
     public function getItemTypes($idCategory)
     {
         if ($idCategory) {
             $itemTypes = ItemType::where('item_category_id', $idCategory)->get();
             $sen['success'] = true;
-            $sen['message'] = "Berhasil menambahkan diskon";
+            $sen['message'] = "Berhasil mengambil data";
             $sen['data'] = $itemTypes;
         }
 
