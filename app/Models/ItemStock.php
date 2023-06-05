@@ -41,6 +41,6 @@ class ItemStock extends Model
 
     public function itemPrice()
     {
-        return $this->hasOne(itemPrice::class, 'id', 'item_price_id');
+        return $this->hasOne(ItemPrice::class, 'id', 'item_price_id');
     }
 }
