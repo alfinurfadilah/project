@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\ItemHistory;
 use App\Models\TransactionHistory;
+use App\Models\TransactionType;
 use Illuminate\Http\Request;
 
 use DB;
@@ -68,7 +69,9 @@ class ReportingController extends Controller
         JOIN transaction_types ON item_histories.transaction_type_id = transaction_types.id
         ORDER BY item_histories.id DESC');
 
-        return view('reporting.laporanTransaksiStock', compact('breadcumb', 'totalStockMasuk', 'totalStockKeluar', 'listTransaksiStock'));
+        $transactionTypes = TransactionType::get();
+
+        return view('reporting.laporanTransaksiStock', compact('breadcumb', 'totalStockMasuk', 'totalStockKeluar', 'listTransaksiStock', 'transactionTypes'));
     }
 
     /**

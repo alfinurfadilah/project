@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('uom_name');
             $table->string('symbol');
             $table->text('description')->nullable();
+            $table->integer('created_by')->nullable();
+            $table->integer('updated_by')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

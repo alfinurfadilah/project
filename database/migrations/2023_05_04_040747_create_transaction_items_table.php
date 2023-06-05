@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('transaction_items', function (Blueprint $table) {
             $table->id();
+            $table->integer('transaction_id');
             $table->integer('item_id');
             $table->float('selling_price');
             $table->integer('qty');

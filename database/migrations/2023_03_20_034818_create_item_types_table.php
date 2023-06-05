@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('name');
             $table->integer('item_category_id');
             $table->text('description')->nullable();
+            $table->integer('created_by')->nullable();
+            $table->integer('updated_by')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
