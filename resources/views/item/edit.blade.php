@@ -142,7 +142,7 @@
                             </div>
                         </div>
                         <div class="card-footer d-flex d-flex justify-content-end">
-                            <button type="button" class="btn btn-light me-5" data-bs-dismiss="modal">Batal</button>
+                            <a href="{{ route('item.index') }}" type="button" class="btn btn-light me-5">Batal</a>
                             <button type="submit" class="btn btn-primary">Simpan</button>
                         </div>
                     </div>

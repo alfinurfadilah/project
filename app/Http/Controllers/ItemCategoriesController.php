@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use DataTables;
 
 class ItemCategoriesController extends Controller
 {
@@ -17,18 +18,19 @@ class ItemCategoriesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //
         $breadcumb = "Kategori";
 
-        $itemCategories = ItemCategories::when(request('search'), function ($query) {
-            return $query->where('name', 'like', '%' . request('search') . '%');
-        })
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+        if ($request->ajax()) {
+            $data = ItemCategories::latest()->get();
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->make(true);
+        }
 
-        return view('itemCategory.index', compact('breadcumb', 'itemCategories'));
+        return view('itemCategory.index', compact('breadcumb'));
     }
 
     /**

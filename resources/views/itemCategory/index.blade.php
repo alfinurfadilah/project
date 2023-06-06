@@ -23,7 +23,7 @@
                         </span>
                         <!--end::Svg Icon-->
                         <input type="text" name="search" class="form-control form-control-solid w-250px ps-15"
-                            placeholder="Cari Jenis Kategori" onblur="this.form.submit()">
+                            placeholder="Cari Jenis Kategori" data-kt-table-filter="searchJenisKategori">
                     </div>
                 </form>
                 <!--end::Search-->
@@ -52,73 +52,19 @@
 
                 <div class="card mt-5">
                     <div class="card-body">
-                        <div class="table-responsive">
-                            <!--begin::Table-->
-                            <table class="table align-middle table-row-dashed fs-6 gy-5">
-                                <thead>
-                                    <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
-                                        <th>No</th>
-                                        <th>Nama Kategori</th>
-                                        <th>Deskripsi</th>
-                                        <th class="text-end min-w-70px">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($itemCategories as $index => $item)
-                                        <tr>
-                                            <td>{{ $index + 1 }}</td>
-                                            <td>{{ $item->name }}</td>
-                                            <td>{{ $item->description }}</td>
-                                            <!--begin::Action=-->
-                                            <td class="text-end">
-                                                <a href="#" class="btn btn-sm btn-light btn-active-light-primary"
-                                                    data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
-                                                    <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
-                                                    <span class="svg-icon svg-icon-5 m-0">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                                            height="24" viewBox="0 0 24 24" fill="none">
-                                                            <path
-                                                                d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z"
-                                                                fill="black" />
-                                                        </svg>
-                                                    </span>
-                                                    <!--end::Svg Icon-->
-                                                </a>
-                                                <!--begin::Menu-->
-                                                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4"
-                                                    data-kt-menu="true">
-                                                    <!--begin::Menu item-->
-                                                    <div class="menu-item px-3">
-                                                        <a href="{{ route('itemCategory.edit', $item->id) }}"
-                                                            class="menu-link px-3">Edit</a>
-                                                    </div>
-                                                    <!--end::Menu item-->
-
-
-                                                    <!--begin::Delete button-->
-                                                    <form action="{{ route('itemCategory.delete', $item->id) }}"
-                                                        method="POST" id="deleteitemCategory{{ $item->id }}">
-                                                        @method('delete')
-                                                        @csrf
-                                                        <!--begin::Menu item-->
-                                                        <div class="menu-item px-3">
-                                                            <a onclick="onDelete({{ $item->id }}, '{{ $item->name }}')"
-                                                                class="menu-link px-3">Hapus</a>
-                                                        </div>
-                                                        <!--end::Menu item-->
-                                                    </form>
-                                                    <!--end::Delete button-->
-                                                </div>
-                                                <!--end::Menu-->
-                                            </td>
-                                            <!--end::Action=-->
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                            <!--end::Table-->
-                            <div>{{ $itemCategories->links('pagination::bootstrap-4') }}</div>
-                        </div>
+                        <!--begin::Table-->
+                        <table id="kt_datatable_item_category" class="table align-middle table-row-dashed fs-6 gy-5">
+                            <thead>
+                                <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
+                                    <th>No</th>
+                                    <th>Nama Kategori</th>
+                                    <th>Deskripsi</th>
+                                    <th class="text-end min-w-70px">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <!--end::Table-->
                     </div>
                 </div>
 
@@ -157,5 +103,158 @@
 
             });
         }
+    </script>
+
+    <script>
+        "use strict";
+
+        // Class definition
+        var KTDatatablesServerSide = function() {
+            // Shared variables
+            var table;
+            var dt;
+
+            // Private functions
+            var initDatatable = function() {
+                dt = $("#kt_datatable_item_category").DataTable({
+                    processing: true,
+                    serverSide: true,
+                    filter: true,
+                    fnDrawCallback: function() {
+                        $('#submit-button').prop('disabled', false);
+                    },
+                    responsive: {
+                        details: {
+                            renderer: function(api, rowIdx, columns) {
+                                var data = $.map(columns, function(col, i) {
+                                    return col.hidden ?
+                                        '<div style="background-color: #F5F8FA66; padding: 13px 25px;">' +
+                                        '<b>' + col.title + '</b><br/>' +
+                                        '<label>' + col.data + '</label>' +
+                                        '</div>' :
+                                        '';
+                                }).join('');
+
+                                return data ?
+                                    $(
+                                        '<table style="width:100%; border: 1px dashed #E4E6EF; border-radius: 6px;"/>'
+                                    )
+                                    .append(data) :
+                                    false;
+                            }
+                        }
+                    },
+                    filter: true,
+                    fnDrawCallback: function() {
+                        $('#submit-button').prop('disabled', false);
+                    },
+                    ajax: {
+                        url: "{{ route('itemCategory.index') }}",
+                    },
+                    columns: [{
+                            data: null,
+                            sortable: false,
+                            render: function(data, type, row, meta) {
+                                // console.log(row.id + row.long_name)
+                                return meta.row + meta.settings._iDisplayStart + 1;
+                            },
+                            sClass: "text-center"
+                        },
+                        {
+                            data: 'name',
+                            name: 'name'
+                        },
+                        {
+                            data: 'description',
+                            name: 'description'
+                        },
+                        {
+                            data: 'id',
+                            name: 'action',
+                            orderable: false,
+                            searchable: false,
+                            sClass: "text-center"
+                        },
+                    ],
+                    columnDefs: [{
+                        targets: -1,
+                        data: null,
+                        orderable: false,
+                        className: 'text-end',
+                        render: function(data, type, full, meta) {
+                            var action = `
+                                <a href="#" class="btn btn-sm btn-light btn-active-light-primary" data-kt-menu-trigger="click"
+                                    data-kt-menu-placement="bottom-end">Actions
+                                    <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
+                                    <span class="svg-icon svg-icon-5 m-0">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                            <path
+                                                d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z"
+                                                fill="black" />
+                                        </svg>
+                                    </span>
+                                    <!--end::Svg Icon-->
+                                </a>
+                                <!--begin::Menu-->
+                                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4"
+                                    data-kt-menu="true">
+                                    <!--begin::Menu item-->
+                                    <div class="menu-item px-3">
+                                        <a href="{{ route('itemCategory.edit', ':id') }}" class="menu-link px-3">Edit</a>
+                                    </div>
+                                    <!--end::Menu item-->
+
+
+                                    <!--begin::Delete button-->
+                                    <form action="{{ route('itemCategory.delete', ':id') }}" method="POST"
+                                        id="deleteitemCategory` + data + `">
+                                        @method('delete')
+                                        @csrf
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3">
+                                            <a onclick="onDelete(` + full.id + `, '` + full.name + `" class="menu-link px-3">Hapus</a>
+                                        </div>
+                                        <!--end::Menu item-->
+                                    </form>
+                                    <!--end::Delete button-->
+                                </div>
+                                <!--end::Menu-->
+                            `;
+
+                            action = action.replaceAll(':id', data);
+                            return action.replace(':id', data);
+                        },
+                    }],
+                });
+
+                table = dt.$;
+
+                // Re-init functions on every table re-draw -- more info: https://datatables.net/reference/event/draw
+                dt.on('draw', function() {
+                    KTMenu.createInstances();
+                });
+            }
+
+            // Search Datatable --- official docs reference: https://datatables.net/reference/api/search()
+            var handleSearchDatatable = function() {
+                const filterSearch = document.querySelector('[data-kt-table-filter="searchJenisKategori"]');
+                filterSearch.addEventListener('keyup', function(e) {
+                    dt.search(e.target.value).draw();
+                });
+            }
+
+            // Public methods
+            return {
+                init: function() {
+                    initDatatable();
+                    handleSearchDatatable();
+                }
+            }
+        }();
+
+        // On document ready
+        KTUtil.onDOMContentLoaded(function() {
+            KTDatatablesServerSide.init();
+        });
     </script>
 @endsection

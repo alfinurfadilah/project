@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('item_id');
             $table->float('selling_price');
             $table->integer('qty');
-            $table->integer('batch_id');
+            $table->string('batch_id');
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
             $table->softDeletes();

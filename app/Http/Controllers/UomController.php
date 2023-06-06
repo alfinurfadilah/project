@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB;
+use DataTables;
 
 class UomController extends Controller
 {
@@ -15,18 +16,19 @@ class UomController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //
         $breadcumb = "Unit Of Measure";
 
-        $uoms = Uom::when(request('search'), function($query){
-            return $query->where('uom_name','like','%'.request('search').'%');
-        })
-        ->orderBy('created_at','desc')
-        ->paginate(10);
-        
-        return view('uom.index', compact('breadcumb', 'uoms'));
+        if ($request->ajax()) {
+            $data = Uom::latest()->get();
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->make(true);
+        }
+
+        return view('uom.index', compact('breadcumb'));
     }
 
     /**
@@ -38,7 +40,7 @@ class UomController extends Controller
     {
         //
         $breadcumb = "Form Tambah Unit Of Measure";
-        
+
         return view('uom.create', compact('breadcumb'));
     }
 
@@ -59,25 +61,23 @@ class UomController extends Controller
 
         DB::beginTransaction();
 
-        try{
+        try {
 
             Uom::create([
                 'uom_name' => $request->namaUom,
                 'symbol' => $request->simbol,
-                'description' => $request->description, 
+                'description' => $request->description,
             ]);
 
-            DB::commit();   
-            return redirect()->route('uom.index')->with('success','Data berhasil disimpan');
-
-        } catch(\Exeception $e) {
+            DB::commit();
+            return redirect()->route('uom.index')->with('success', 'Data berhasil disimpan');
+        } catch (\Exeception $e) {
 
             DB::rollback();
-            return redirect()->back()->with('errorTransaksi','Data gagal disimpan');    
-                
+            return redirect()->back()->with('errorTransaksi', 'Data gagal disimpan');
         }
 
-        return redirect()->back()->with('errorTransaksi','Data gagal disimpan');
+        return redirect()->back()->with('errorTransaksi', 'Data gagal disimpan');
     }
 
     /**
@@ -103,7 +103,7 @@ class UomController extends Controller
         $breadcumb = "Edit Unit Of Measure";
 
         $uom = $uom->find($id);
-                    
+
         return view('uom.edit', compact('breadcumb', 'uom'));
     }
 
@@ -125,7 +125,7 @@ class UomController extends Controller
 
         DB::beginTransaction();
 
-        try{
+        try {
 
             $data = [
                 'uom_name' => $request->namaUom,
@@ -135,17 +135,15 @@ class UomController extends Controller
 
             $uom->find($request->id)->update($data);
 
-            DB::commit();   
-            return redirect()->back()->with('success','Data Berhasil Disimpan'); 
-
-        } catch(\Exeception $e) {
+            DB::commit();
+            return redirect()->back()->with('success', 'Data Berhasil Disimpan');
+        } catch (\Exeception $e) {
 
             DB::rollback();
-            return redirect()->back()->with('error','Data gagal disimpan');    
-                
+            return redirect()->back()->with('error', 'Data gagal disimpan');
         }
 
-        return redirect()->back()->with('error','Data gagal disimpan'); 
+        return redirect()->back()->with('error', 'Data gagal disimpan');
     }
 
     /**
@@ -158,15 +156,14 @@ class UomController extends Controller
     {
         DB::beginTransaction();
 
-        try{
-            $uom->find($id)->delete();     
+        try {
+            $uom->find($id)->delete();
 
             DB::commit();
-            return redirect()->route('uom.index')->with('success','Kagegori berhasil dihapus');                             
+            return redirect()->route('uom.index')->with('success', 'Kagegori berhasil dihapus');
+        } catch (\Exeception $e) {
+            DB::rollback();
+            return redirect()->route('uom.index')->with('error', $e);
         }
-        catch(\Exeception $e){
-            DB::rollback();      
-            return redirect()->route('uom.index')->with('error',$e);      
-        }  
     }
 }

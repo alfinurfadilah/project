@@ -274,13 +274,17 @@
                                     $dateExp = date_create($itemStock->expired_date);
                                     $interval = $dateNow->diff($dateExp);
                                     
-                                    // dd('difference ' . $interval->y . ' years, ' . $interval->m . ' months, ' . $interval->d . ' days ');
+                                    $year = $interval->y > 0 ? $interval->y . ' Tahun, ' : '';
+                                    $month = $interval->m > 0 ? $interval->m . ' Bulan, ' : '';
+                                    $day = $interval->d > 0 ? $interval->d . ' Hari' : '';
                                     
+                                    $expiredLeft = $year . $month . $day;
+                                    // dd($expiredLeft);
+                                    // dd('difference ' . $interval->y . ' years, ' . $interval->m . ' months, ' . $interval->d . ' days ');
                                 @endphp
                                 <td>
                                     {{ date_format(date_create($itemStock->expired_date), 'd F Y') }}
-                                    ({{ $interval->d > 0 ? $interval->d : 0 }}
-                                    Days left)
+                                    ({{ $expiredLeft }} tersisa)
                                 </td>
                                 <td>Rp. {{ number_format($itemStock->itemPrice->current_price) }}</td>
                                 <td>Rp. {{ number_format($itemStock->itemPrice->price) }}</td>
