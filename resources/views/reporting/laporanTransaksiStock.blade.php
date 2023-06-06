@@ -12,15 +12,15 @@
                 <h1>Laporan Transaksi Stock</h1>
             </div>
         </div>
-        <div class="card-header">
+        {{-- <div class="card-header">
             <div class="card-title">
                 <div class="py-5">
                     <label class="form-label">Periode</label>
                     <input class="form-control form-control-solid position-relative w-200px" placeholder="Pick date rage"
-                        name="dateRangePicker" id="dateRangePickerAttendance">
+                        name="dateRangePicker">
                 </div>
             </div>
-        </div>
+        </div> --}}
         <div class="card-body">
             <div class="row">
                 <div class="col-6">
@@ -72,7 +72,7 @@
                         </svg>
                     </span>
                     <!--end::Svg Icon-->
-                    <input type="text" data-kt-customer-table-filter="search"
+                    <input type="text" data-kt-table-filter="search"
                         class="form-control form-control-solid w-250px ps-15" placeholder="Cari barang / batch">
                 </div>
                 <!--end::Search-->
@@ -111,21 +111,14 @@
                         <div class="px-7 py-5">
                             <!--begin::Input group-->
                             <div class="mb-10">
-                                <label for="" class="form-label">Tanggal :</label>
-                                <input class="form-control" placeholder="Pilih tanggal" id="kt_datepicker_1" />
-                            </div>
-                            <!--end::Input group-->
-                            <!--begin::Input group-->
-                            <div class="mb-10">
                                 <!--begin::Label-->
                                 <label class="form-label fs-5 fw-bold mb-3">Jenis Transaksi :</label>
                                 <!--end::Label-->
                                 <!--begin::Options-->
-                                <div class="d-flex flex-column flex-wrap fw-bold"
-                                    data-kt-customer-table-filter="payment_type">
+                                <div class="d-flex flex-column flex-wrap fw-bold" data-kt-table-filter="jenis_transaksi">
                                     <!--begin::Option-->
                                     <label class="form-check form-check-sm form-check-custom form-check-solid mb-3 me-5">
-                                        <input class="form-check-input" type="radio" name="payment_type" value="all"
+                                        <input class="form-check-input" type="radio" name="jenis_transaksi" value="All"
                                             checked="checked">
                                         <span class="form-check-label text-gray-600">All</span>
                                     </label>
@@ -134,10 +127,9 @@
                                         <!--begin::Option-->
                                         <label
                                             class="form-check form-check-sm form-check-custom form-check-solid mb-3 me-5">
-                                            <input class="form-check-input" type="radio" name="payment_type"
-                                                value="{{ $transactionType->id }}">
-                                            <span
-                                                class="form-check-label text-gray-600">{{ $transactionType->name }}</span>
+                                            <input class="form-check-input" type="radio" name="jenis_transaksi"
+                                                value="{{ $transactionType->name }}">
+                                            <span class="form-check-label text-gray-600">{{ $transactionType->name }}</span>
                                         </label>
                                         <!--end::Option-->
                                     @endforeach
@@ -148,9 +140,9 @@
                             <!--begin::Actions-->
                             <div class="d-flex justify-content-end">
                                 <button type="reset" class="btn btn-light btn-active-light-primary me-2"
-                                    data-kt-menu-dismiss="true" data-kt-customer-table-filter="reset">Reset</button>
+                                    data-kt-menu-dismiss="true" data-kt-table-filter="reset">Reset</button>
                                 <button type="submit" class="btn btn-primary" data-kt-menu-dismiss="true"
-                                    data-kt-customer-table-filter="filter">Apply</button>
+                                    data-kt-table-filter="filter">Apply</button>
                             </div>
                             <!--end::Actions-->
                         </div>
@@ -158,7 +150,7 @@
                     </div>
                     <!--end::Menu 1-->
                     <!--end::Filter-->
-                    <!--begin::Export-->
+                    {{-- <!--begin::Export-->
                     <button type="button" class="btn btn-light-primary me-3" data-bs-toggle="modal"
                         data-bs-target="#kt_customers_export_modal">
                         <!--begin::Svg Icon | path: icons/duotune/arrows/arr078.svg-->
@@ -177,12 +169,11 @@
                         </span>
                         <!--end::Svg Icon-->Export
                     </button>
-                    <!--end::Export-->
+                    <!--end::Export--> --}}
                 </div>
                 <!--end::Toolbar-->
                 <!--begin::Group actions-->
-                <div class="d-flex justify-content-end align-items-center d-none"
-                    data-kt-customer-table-toolbar="selected">
+                <div class="d-flex justify-content-end align-items-center d-none" data-kt-customer-table-toolbar="selected">
                     <div class="fw-bolder me-5">
                         <span class="me-2" data-kt-customer-table-select="selected_count"></span>Selected
                     </div>
@@ -194,44 +185,33 @@
             <!--end::Card toolbar-->
         </div>
         <div class="card-body">
-            <div class="table-responsive">
-                <!--begin::Table-->
-                <table class="table align-middle table-row-dashed fs-6 gy-5">
-                    <thead>
-                        <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
-                            <th>Tanggal Transaksi</th>
-                            <th>Batch</th>
-                            <th>Nama Barang</th>
-                            <th>Stock Awal</th>
-                            <th>IN/OUT</th>
-                            <th>Stok Sekarang</th>
-                            <th>Tipe Transaksi</th>
-                            <th>Deskripsi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($listTransaksiStock as $itemStock)
-                            <tr>
-                                <td>{{ $itemStock->TGL_TRX }}</td>
-                                <td>{{ $itemStock->BATCH_CODE }}</td>
-                                <td>{{ $itemStock->name }}</td>
-                                <td>{{ $itemStock->qty }}</td>
-                                <td>{{ $itemStock->TRX_TYPE_ID == 2 ? '(' . $itemStock->qty_change . ')' : $itemStock->qty_change }}
-                                </td>
-                                <td>{{ $itemStock->qty_current }}</td>
-                                <td>{{ $itemStock->TRX_TYPE }}</td>
-                                <td>{{ $itemStock->description }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-                <!--end::Table-->
-            </div>
+            <!--begin::Table-->
+            <table id="kt_datatable_list_transaksi" class="table table-row-dashed fs-6 gy-5">
+                <thead>
+                    <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
+                        <th>No</th>
+                        <th>Tanggal Transaksi</th>
+                        <th>Batch</th>
+                        <th>Nama Barang</th>
+                        <th>Stock Awal</th>
+                        <th>IN/OUT</th>
+                        <th>Stok Sekarang</th>
+                        <th>Tipe Transaksi</th>
+                        <th>Deskripsi</th>
+                    </tr>
+                </thead>
+                <tbody class="text-gray-600 fw-bold"></tbody>
+            </table>
+            <!--end::Table-->
         </div>
     </div>
 @endsection
 
 @section('onpage-js')
+    <!--begin::Page Vendors Javascript(used by this page)-->
+    <script src="{{ asset('themes/metronic-demo9/plugins/custom/datatables/datatables.bundle.js') }}"></script>
+    <!--end::Page Vendors Javascript-->
+
     {{-- begin::Date Range --}}
     <script>
         // var start = moment().subtract(29, "days");
@@ -265,8 +245,169 @@
         }, cb);
 
         cb(start, end);
-
-        $("#kt_datepicker_1").flatpickr();
     </script>
     {{-- end::Date Range --}}
+
+    <script>
+        "use strict";
+
+        // Class definition
+        var KTDatatablesServerSide = function() {
+            // Shared variables
+            var table;
+            var dt;
+            var filterPayment;
+
+            // Private functions
+            var initDatatable = function() {
+                dt = $("#kt_datatable_list_transaksi").DataTable({
+                    processing: true,
+                    serverSide: true,
+                    filter: true,
+                    fnDrawCallback: function() {
+                        $('#submit-button').prop('disabled', false);
+                    },
+                    responsive: {
+                        details: {
+                            renderer: function(api, rowIdx, columns) {
+                                var data = $.map(columns, function(col, i) {
+                                    return col.hidden ?
+                                        '<div style="background-color: #F5F8FA66; padding: 13px 25px;">' +
+                                        '<b>' + col.title + '</b><br/>' +
+                                        '<label>' + col.data + '</label>' +
+                                        '</div>' :
+                                        '';
+                                }).join('');
+
+                                return data ?
+                                    $(
+                                        '<table style="width:100%; border: 1px dashed #E4E6EF; border-radius: 6px;"/>'
+                                    )
+                                    .append(data) :
+                                    false;
+                            }
+                        }
+                    },
+                    filter: true,
+                    fnDrawCallback: function() {
+                        $('#submit-button').prop('disabled', false);
+                    },
+                    ajax: {
+                        url: "{{ route('reporting.laporanTransaksiStock') }}",
+                    },
+                    columns: [{
+                            data: null,
+                            sortable: false,
+                            render: function(data, type, row, meta) {
+                                // console.log(row.id + row.long_name)
+                                return meta.row + meta.settings._iDisplayStart + 1;
+                            },
+                            sClass: "text-center"
+                        },
+                        {
+                            data: 'TGL_TRX'
+                        },
+                        {
+                            data: 'BATCH_CODE'
+                        },
+                        {
+                            data: 'name'
+                        },
+                        {
+                            data: 'qty'
+                        },
+                        {
+                            data: 'in_out'
+                        },
+                        {
+                            data: 'qty_current'
+                        },
+                        {
+                            data: 'TRX_TYPE'
+                        },
+                        {
+                            data: 'description'
+                        }
+                    ]
+                });
+
+                table = dt.$;
+
+                // Re-init functions on every table re-draw -- more info: https://datatables.net/reference/event/draw
+                dt.on('draw', function() {
+                    KTMenu.createInstances();
+                });
+            }
+
+            // Search Datatable --- official docs reference: https://datatables.net/reference/api/search()
+            var handleSearchDatatable = function() {
+                const filterSearch = document.querySelector('[data-kt-table-filter="search"]');
+                filterSearch.addEventListener('keyup', function(e) {
+                    dt.search(e.target.value).draw();
+                });
+            }
+
+            // Filter Datatable
+            var handleFilterDatatable = () => {
+                // Select filter options
+
+                // const filterTanggal = $("input[name=filterTanggal]").text();
+
+                filterPayment = document.querySelectorAll(
+                    '[data-kt-table-filter="jenis_transaksi"] [name="jenis_transaksi"]');
+                const filterButton = document.querySelector('[data-kt-table-filter="filter"]');
+
+                // Filter datatable on submit
+                filterButton.addEventListener('click', function() {
+                    // Get filter values
+                    let paymentValue = '';
+
+                    // Get payment value
+                    filterPayment.forEach(r => {
+                        if (r.checked) {
+                            paymentValue = r.value;
+                        }
+
+                        // Reset payment value if "All" is selected
+                        if (paymentValue === 'All') {
+                            paymentValue = '';
+                        }
+                    });
+
+                    // Filter datatable --- official docs reference: https://datatables.net/reference/api/search()
+                    dt.search(paymentValue).draw();
+                });
+            }
+
+            // Reset Filter
+            var handleResetForm = () => {
+                // Select reset button
+                const resetButton = document.querySelector('[data-kt-table-filter="reset"]');
+
+                // Reset datatable
+                resetButton.addEventListener('click', function() {
+                    // Reset payment type
+                    filterPayment[0].checked = true;
+
+                    // Reset datatable --- official docs reference: https://datatables.net/reference/api/search()
+                    dt.search('').draw();
+                });
+            }
+
+            // Public methods
+            return {
+                init: function() {
+                    initDatatable();
+                    handleSearchDatatable();
+                    handleFilterDatatable();
+                    handleResetForm();
+                }
+            }
+        }();
+
+        // On document ready
+        KTUtil.onDOMContentLoaded(function() {
+            KTDatatablesServerSide.init();
+        });
+    </script>
 @endsection
