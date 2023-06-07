@@ -106,7 +106,7 @@
                                         </div>
                                     </td>
                                     <td class="align-middle">{{ $item->itemCategories->name }}</td>
-                                    <td class="align-middle">{{ $item->itemType->name }}</td>
+                                    <td class="align-middle">{{ @$item->itemType->name }}</td>
                                     <td class="align-middle">{{ $item->uom->uom_name }}</td>
                                     {{-- <td class="align-top">
                                 @php
