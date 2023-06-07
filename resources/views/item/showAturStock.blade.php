@@ -73,7 +73,7 @@
                                         </svg>
                                     </span>
                                     <!--end::Svg Icon-->
-                                    {{ $item->itemType->name }}
+                                    {{ @$item->itemType->name }}
                                 </a>
                             </div>
                             <!--end::Info-->
