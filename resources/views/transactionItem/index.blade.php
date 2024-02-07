@@ -656,7 +656,7 @@
             }
             return rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
         }
-
+         
         function simpanTransaksi() {
             var divFormId = "divContainerTransaksi";
             var overlayId = "overlayDivContainerTransaksi";

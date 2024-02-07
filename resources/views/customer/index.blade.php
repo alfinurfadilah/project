@@ -157,7 +157,7 @@
                                         <label class="form-label required" for="jumlahStock">Nama Customer</label>
                                         <input type="text" class="form-control form-control-solid" name="name"
                                             value="{{ old('namaUom') }}">
-                                        @include('layouts.error', ['name' => 'namaUom'])
+                                        
                                     </div>
                                 </div>
                             </div>

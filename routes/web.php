@@ -102,6 +102,26 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/transactionItem/addPPN', [App\Http\Controllers\TransactionItemController::class, 'addPPN'])->name('transactionItem.addPPN');
     Route::post('/transactionItem/removePPN', [App\Http\Controllers\TransactionItemController::class, 'removePPN'])->name('transactionItem.removePPN');
 
+    Route::get('/itemReceiving', [App\Http\Controllers\ItemReceivingController::class, 'index'])->name('itemReceiving.index');
+    Route::get('/itemReceiving/create', [App\Http\Controllers\ItemReceivingController::class, 'create'])->name('itemReceiving.create');
+    Route::post('/itemReceiving/store', [App\Http\Controllers\ItemReceivingController::class, 'store'])->name('itemReceiving.store');
+
     Route::get('/reporting/laporanPenjualan', [App\Http\Controllers\ReportingController::class, 'laporanPenjualan'])->name('reporting.laporanPenjualan');
     Route::get('/reporting/laporanTransaksiStock', [App\Http\Controllers\ReportingController::class, 'laporanTransaksiStock'])->name('reporting.laporanTransaksiStock');
+
+    Route::get('/users', [App\Http\Controllers\UserController::class, 'index'])->name('users.index');
+    Route::get('/users/create', [App\Http\Controllers\UserController::class, 'create'])->name('users.create');
+    Route::post('/users/store', [App\Http\Controllers\UserController::class, 'store'])->name('users.store');
+    Route::get('/users/edit/{id}', [App\Http\Controllers\UserController::class, 'edit'])->name('users.edit');
+    Route::post('/users/update', [App\Http\Controllers\UserController::class, 'update'])->name('users.update');
+    Route::delete('/users/delete/{id}', [App\Http\Controllers\UserController::class, 'destroy'])->name('users.delete');
+
+
+    Route::get('/datacalonpelanggan', [App\Http\Controllers\DataCalonPelangganController::class, 'index'])->name('datacalonpelanggan.index');
+    Route::get('/datacalonpelanggan/create', [App\Http\Controllers\DataCalonPelangganController::class, 'create'])->name('datacalonpelanggan.create');
+    Route::post('/datacalonpelanggan', [App\Http\Controllers\DataCalonPelangganController::class, 'store'])->name('datacalonpelanggan.store');
+    Route::get('/datacalonpelanggan/edit/{id}', [App\Http\Controllers\DataCalonPelangganController::class, 'edit'])->name('datacalonpelanggan.edit');
+    Route::post('/datacalonpelanggan/update', [App\Http\Controllers\DataCalonPelangganController::class, 'update'])->name('datacalonpelanggan.update');
+    Route::delete('/datacalonpelanggan/delete/{id}', [App\Http\Controllers\DataCalonPelangganController::class, 'destroy'])->name('datacalonpelanggan.delete');
+
 });

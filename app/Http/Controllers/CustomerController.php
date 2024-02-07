@@ -138,7 +138,7 @@ class CustomerController extends Controller
             $customer->find($request->id)->update($data);
 
             DB::commit();   
-            return redirect()->back()->with('success','Data Berhasil Disimpan'); 
+            return redirect()->route('customer.index')->with('success','Data Berhasil Disimpan'); 
 
         } catch(\Exeception $e) {
 
